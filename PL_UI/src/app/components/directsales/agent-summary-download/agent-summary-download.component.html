@@ -1,0 +1,183 @@
+<app-header-breadcrumb [title]="'Direct Sales'" 
+[items]="['DirectSales']" [active_item]="'Agent excel Summary'"
+[showAddNew]="false" *ngIf="showheader"> 
+</app-header-breadcrumb>
+
+<form [formGroup]="downloadForm">
+    <div class="card">
+        <div class="card-header" *ngIf="showheader">
+            <h3 class="card-title">Agent excel Summary</h3>
+        </div>
+        <div class="card-body" id="entryForm">
+            <div class="row">
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">From Month</label>
+                <input [matDatepicker]="fromDp" [formControl]="fromMonth" (click)="fromDp.open()" (focus)="fromDp.open()" class="form-control">
+                <mat-datepicker #fromDp startView="multi-year" (yearSelected)="chosenFromYearHandler($event)" (monthSelected)="chosenFromMonthHandler($event, fromDp)">
+                </mat-datepicker>
+                </div>
+               </div>
+               <div class="col-sm-6 col-md-3">
+                <div class="form-group">
+                    <label class="form-label">To Month</label>
+                    <input [matDatepicker]="toDp" [formControl]="toMonth" (click)="toDp.open()" (focus)="toDp.open()" class="form-control">
+                    <mat-datepicker #toDp startView="multi-year" (yearSelected)="chosenToYearHandler($event)" (monthSelected)="chosenToMonthHandler($event, toDp)">
+                    </mat-datepicker>
+                    
+            </div>
+           </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Customer Type<span class="text-red">*</span></label>
+                        <ng-select [items]="customerTypeList" bindLabel="description"
+                        class="select2 custom-select" bindValue="id"  
+                        formControlName="CustomerType" placeholder="Customer Type"
+                        (change)="onCustomerTypeChange()">
+                        </ng-select>
+                        <div *ngIf="(form.CustomerType?.touched && form.CustomerType?.errors)" class="text-danger">
+                            <div *ngIf="form.CustomerType?.errors?.required">Please select Customer Type</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Customer<span class="text-red">*</span></label>
+                        <ng-select [items]="customerList" bindLabel="customerName"
+                        class="select2 custom-select" bindValue="customerId"  
+                        formControlName="CustomerId" placeholder="Customer">
+                        </ng-select>
+                        <div *ngIf="(form.CustomerId?.touched && form.CustomerId?.errors)" class="text-danger">
+                            <div *ngIf="form.CustomerId?.errors?.required">Please select Customer</div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group">
+                            <label class="form-label">Sub Category<span class="text-red">*</span></label>
+                            <ng-select [items]="productCategoryList" bindLabel="displayName" class="select2 custom-select" bindValue="id"  
+                            (change)="getProductSubCategoryList()" formControlName="ProductCategoryId" placeholder="Product Sub Category">
+                            </ng-select>
+                            <div *ngIf="(form.productCategoryId?.touched && form.productCategoryId?.errors)" class="text-danger">
+                                <div *ngIf="form.productCategoryId?.errors?.required">Please select Sub Category</div>
+                            </div>
+                        </div>
+                        </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Product Type</label>
+                        <ng-select [items]="productSubCategoryList" bindLabel="displayName" class=" select2 custom-select" bindValue="id"  
+                        formControlName="ProductSubCategoryId" placeholder="Product Type">
+                        </ng-select>
+
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group ">
+                        <div class="form-label">Sales Sub Type <span class="text-red">*</span></div>
+                        <div class="custom-controls-stacked">
+                            <label class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="SaleSubType"
+                                    value="Monthly" checked formControlName="SaleSubType">
+                                <span class="custom-control-label">Monthly</span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="SaleSubType"
+                                    value="BP" formControlName="SaleSubType">
+                                <span class="custom-control-label">BP</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsUSDCurrency" class="custom-control-input" formControlName="IsUSDCurrency">
+                            <span class="custom-control-label">USD</span>
+                        </label>
+                    </div>
+                </div>
+           
+            <div class="row" *ngIf="error.length>0">
+                <div class="col-sm-6 col-md-12 text-danger" [innerHTML]="error" style="overflow-y: auto;height: 100px;">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default-light" (click)="clearForm()">
+                <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+            <button [disabled]="searching || loading" class="btn btn-indigo" type="button" (click)="onSearch()"
+            [style.pointer-events]="searching?'none':''">
+            <i class="fe fe-search" *ngIf="!searching"> </i>
+            <i class="fa fa-spinner fa-spin" *ngIf="searching"> </i>
+            &nbsp; {{searching? 'Searching' : ' Search'}} &nbsp;
+            </button>
+            <button [disabled]="loading || searching" class="btn btn-indigo" type="button" (click)="onDownload()"
+            [style.pointer-events]="loading?'none':''">
+            <i class="fe fe-download" *ngIf="!loading"> </i>
+            <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+            &nbsp; {{loading? 'Downloading' : ' Download'}} &nbsp;
+        </button>
+        </div>
+    </div>
+</div>
+</form>
+<div class="row" *ngIf="shpwGridPanel">
+    <div class="col-md-12 col-lg-12">
+        <div class="card " [(ngbCollapse)]="isClosedPanel">
+            <div class="card-header ">
+                <h3 class="card-title ">Sales Data</h3>
+                <div class="card-options">
+                    <a href="javascript:;" class="card-options-collapse" (click)="collapseToggle()"
+                        [attr.aria-expanded]="!isCollapsedPanel">
+                        <i class="fe fe-chevron-{{ !isCollapsedPanel ? 'up' : 'down'}}"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body " [(ngbCollapse)]="isCollapsedPanel">
+                <dx-data-grid id="gridContainer" [dataSource]="salesList" keyExpr="itemCode" [showBorders]="true"
+                columnResizingMode="widget" [allowColumnResizing]="true">
+                <dxo-column-chooser #columnChooser [enabled]="true" mode="select">
+                </dxo-column-chooser>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxo-paging [pageSize]="20"></dxo-paging>
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                <dxi-column   dataField="itemCode" caption="Item Code">
+                </dxi-column>
+                <dxi-column dataField="typeCode" caption="Type"></dxi-column>
+                    <dxi-column [alignment]="'right'"   dataField="monthYear" caption="MonthYear"></dxi-column>
+                    <dxi-column [alignment]="'right'"  dataField="qty" caption="Quantity">
+                        <dxo-format format="#,##0"></dxo-format>
+                    </dxi-column>
+                    <dxi-column [alignment]="'right'"  dataField="price" caption="Price">
+                        <dxo-format format="#,##0.00"></dxo-format>
+                    </dxi-column>
+                    <dxi-column  dataField="currency" caption="Currency"></dxi-column>
+                    <dxi-column [alignment]="'right'"   dataField="amount" caption="Amount">
+                        <dxo-format format="#,##0.00"></dxo-format>
+                    </dxi-column>
+                    <!-- <dxo-export [enabled]="!loading" ></dxo-export> -->
+                    <dxo-summary>
+                        <dxi-total-item column="qty" [valueFormat]="'#,##0'" summaryType="sum" displayFormat=" {0}">
+                        </dxi-total-item>
+                        <dxi-total-item column="price" [valueFormat]="'#,##0.00'" summaryType="sum"
+                            displayFormat=" {0}">
+                        </dxi-total-item>
+                        <dxi-total-item column="amount" [valueFormat]="'#,##0.00'" summaryType="sum"
+                        displayFormat=" {0}">
+                    </dxi-total-item>
+                    </dxo-summary>
+                    <dxo-toolbar>
+                        <dxi-item name="exportButton"></dxi-item>
+                        <dxi-item name="columnChooserButton"></dxi-item>
+                        <dxi-item name="searchPanel"></dxi-item>
+                      </dxo-toolbar>
+                </dx-data-grid>
+            </div>
+
+        </div>
+    </div>
+
+</div> 

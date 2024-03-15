@@ -1,0 +1,315 @@
+<app-header-breadcrumb [title]="'MODEL MASTER'" [items]="['Masters']" [showExport]="showExportButton"
+    (onExportClickEvent)="onExportClick($event)" [showAddNew]="showAddNewButton" (openPopUp)="onAddNewClick($event)"
+    [active_item]="'Model'" [showOtherButton]="showOtherButton" [loading]="excelLoading" otherIcon="fa fa-step-backward"
+    (onOtherButtonclick)="backButton()" OtherButtonTitle="Go Back"></app-header-breadcrumb>
+
+<form [formGroup]="materialForm">
+    <div class="card" *ngIf="showEntryScreen">
+
+        <div class="card-header">
+            <h3 class="card-title">Model</h3>
+        </div>
+        <div class="card-body" id="entryForm">
+            <div class="card-header p-0">
+                <h3 class="card-title mb-md-2">Description</h3>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Company<span class="text-red">*</span></label>
+                        <ng-select [items]="getCompanies" bindLabel="companyName"
+                            class="select2 custom-select" bindValue="companyId" formControlName="CompanyId"
+                            placeholder="company">
+                        </ng-select>
+                        <div *ngIf="submitted && f.CompanyId.errors" class="text-danger">
+                            <div *ngIf="f.CompanyId.errors.required">Please select company
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Material Code<span class="text-red">*</span></label>
+                        <input type="text" class="form-control" maxlength="20" placeholder="material code"
+                            formControlName="MaterialCode" [readOnly]="isDisable">
+                        <div *ngIf="submitted && f.MaterialCode.errors" class="text-danger">
+                            <div *ngIf="f.MaterialCode.errors.required">Please enter material code
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Material Short Description <span class="text-red">*</span></label>
+                        <input type="text" class="form-control" maxlength="200" placeholder="material short description"
+                            formControlName="MaterialShortDescription">
+                        <div *ngIf="submitted && f.MaterialShortDescription.errors" class="text-danger">
+                            <div *ngIf="f.MaterialShortDescription.errors.required">Please enter short description
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-header p-0">
+                <h3 class="card-title mb-md-2">Product Category</h3>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">MG<span class="text-red">*</span></label>
+                        <ng-select [items]="getMG1" bindLabel="displayName" class=" select2 custom-select"
+                            bindValue="id" (change)="loadMg2(f.ProductCategoryId1?.value)"
+                            formControlName="ProductCategoryId1" placeholder="MG">
+                        </ng-select>
+                        <div *ngIf="submitted && f.ProductCategoryId1.errors" class="text-danger">
+                            <div *ngIf="f.ProductCategoryId1.errors.required">Please enter MG
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">MG1<span class="text-red">*</span></label>
+                        <ng-select [items]="getMG2" bindLabel="displayName" class=" select2 custom-select"
+                            bindValue="id" (change)="loadMg3(f.ProductCategoryId2?.value)"
+                            formControlName="ProductCategoryId2" placeholder="MG1">
+                        </ng-select>
+                        <div *ngIf="submitted && f.ProductCategoryId2.errors" class="text-danger">
+                            <div *ngIf="f.ProductCategoryId2.errors.required">Please enter MG1
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">MG2 <span class="text-red">*</span></label>
+                        <ng-select [items]="getMG3" bindLabel="displayName" class="select2 custom-select"
+                            bindValue="id" formControlName="ProductCategoryId3" placeholder="MG2">
+                        </ng-select>
+                        <div *ngIf="submitted && f.ProductCategoryId3.errors" class="text-danger">
+                            <div *ngIf="f.ProductCategoryId3.errors.required">Please enter MG2
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">MG3<span class="text-red">*</span></label>
+                        <ng-select [items]="getMG4" bindLabel="displayName" class=" select2 custom-select"
+                            bindValue="id" formControlName="ProductCategoryId4" placeholder="MG3">
+                        </ng-select>
+                        <div *ngIf="submitted && f.ProductCategoryId4.errors" class="text-danger">
+                            <div *ngIf="f.ProductCategoryId4.errors.required">Please enter MG3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">MG4<span class="text-red">*</span></label>
+                        <ng-select [items]="getMG5" bindLabel="displayName" class=" select2 custom-select"
+                            bindValue="id" formControlName="ProductCategoryId5" placeholder="MG4">
+                        </ng-select>
+                        <div *ngIf="submitted && f.ProductCategoryId5.errors" class="text-danger">
+                            <div *ngIf="f.ProductCategoryId5.errors.required">Please enter MG4
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">MG5<span class="text-red">*</span></label>
+                        <ng-select [items]="getMG6" bindLabel="displayName" class=" select2 custom-select"
+                            bindValue="id" formControlName="ProductCategoryId6" placeholder="MG5">
+                        </ng-select>
+                        <div *ngIf="submitted && f.ProductCategoryId6.errors" class="text-danger">
+                            <div *ngIf="f.ProductCategoryId6.errors.required">Please enter MG5
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header p-0">
+                <h3 class="card-title mb-md-2">Other Details</h3>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Bar Code<span class="text-red">*</span></label>
+                        <input type="text" class="form-control" maxlength="100" placeholder="bar code"
+                        numbersOnly   formControlName="BarCode">
+                        <div *ngIf="submitted && f.BarCode.errors" class="text-danger">
+                            <div *ngIf="f.BarCode.errors.required">Please enter bar code
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Weight</label>
+                        <input type="text" class="form-control"  (input)="onInputChange($event)" maxlength="50" placeholder="weight"
+                            formControlName="Weight">
+                            
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Volume</label>
+                        <input type="number" class="form-control" (input)="onInputChange($event)" maxlength="50" placeholder="volume"
+                            formControlName="Volume">
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Supplier</label>
+                        <ng-select [items]="getSuppliers" bindLabel="supplierName"
+                            class=" select2 custom-select" bindValue="supplierId"
+                            formControlName="SupplierId" placeholder="supplier">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Sea Port</label>
+                        <ng-select [items]="getSeaPorts" bindLabel="seaPortName"
+                            class=" select2 custom-select" bindValue="seaPortId" formControlName="SeaPortId"
+                            placeholder="sea port">
+                        </ng-select>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Air Port</label>
+                        <ng-select [items]="getAirPorts" bindLabel="airPortName"
+                            class=" select2 custom-select" bindValue="airPortId" formControlName="AirPortId"
+                            placeholder="air port">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header p-0">
+                <h3 class="card-title mb-md-2">Map Countries</h3>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Map Countries</label>
+                        <div class="form-group">
+                           
+                            <angular2-multiselect [settings]="customerMultiSelectSettings" formControlName="CountryIds"
+                            [data]="getCountries">
+                    </angular2-multiselect>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" id="Active" class="custom-control-input" formControlName="IsActive">
+                            <span class="custom-control-label">Active</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" id="Active" class="custom-control-input" formControlName="InSap">
+                            <span class="custom-control-label">In SAP</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+
+            <button type="button" class="btn btn-default-light" (click)="reload()">
+                <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+            <button [disabled]="loading" class="btn btn-indigo" type="button" (click)="onSubmit()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+            </button>
+        </div>
+    </div>
+</form>
+
+
+
+<div class="row" *ngIf=" !showEntryScreen">
+    <div class="col-md-12 col-lg-12">
+        <div class="card " [(ngbCollapse)]="isClosed8">
+            <div class="card-header ">
+                <h3 class="card-title ">Model List</h3>
+                <div class="card-options">
+                    <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                        [attr.aria-expanded]="!isCollapsed8">
+                        <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+                    </a>
+
+                </div>
+            </div>
+            <div class="card-body " [(ngbCollapse)]="isCollapsed8">
+                <dx-data-grid id="grid" [dataSource]="materialList" columnResizingMode="widget"
+                    [allowColumnResizing]="true"  [showBorders]="true">
+                    <dxo-column-chooser #columnChooser [enabled]="true" mode="select">
+                    </dxo-column-chooser>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-header-filter [visible]="true" alignment="right"></dxo-header-filter>
+                    <dxo-paging [pageSize]="20"></dxo-paging>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                    <dxi-column  dataField="companyName" caption="Company">
+                    </dxi-column>
+                    <dxi-column  dataField="materialCode" caption="Material"></dxi-column>
+                    <dxi-column  dataField="materialShortDescription" caption="Description"></dxi-column>
+                    <dxi-column  dataField="productCategoryName1" caption="MG"></dxi-column>
+                    <dxi-column  dataField="productCategoryName2" caption="MG1"></dxi-column>
+                    <dxi-column  dataField="productCategoryName3" caption="MG2"></dxi-column>
+                    <dxi-column  dataField="productCategoryName4" caption="MG3"></dxi-column>
+                    <dxi-column  dataField="productCategoryName5" caption="MG4"></dxi-column>
+                    <dxi-column  dataField="productCategoryName6" caption="MG5"></dxi-column>
+                    <dxi-column  [visible]="false"  dataField="barCode" caption="BarCode"></dxi-column>
+                    <dxi-column  [visible]="false" dataType="decimal" dataField="weight" caption="Weight"></dxi-column>
+                    <dxi-column  [visible]="false" dataType="decimal" dataField="volume" caption="Volume"></dxi-column>
+                    <dxi-column  [visible]="false" dataField="SupplierName" caption="Supplier"></dxi-column>
+                    <dxi-column  [visible]="false" dataField="seaPortName" caption="SeaPort"></dxi-column>
+                    <dxi-column  [visible]="false" dataField="airPortName" caption="AirPort"></dxi-column>
+                    <dxi-column  dataField="countryNames" caption="Countries"></dxi-column>
+                    <dxi-column  dataField="isActive" [showEditorAlways]='false'
+                        [customizeText]='customizeText' caption="IsActive"></dxi-column>
+                    <dxi-column  [visible]="false" dataField="inSap" [showEditorAlways]='false'
+                        [customizeText]='customizeText' caption="InSAP"></dxi-column>
+                    <dxi-column  [visible]="false" dataField="createdBy" caption="CreatedBy"></dxi-column>
+                    <dxi-column  [visible]="false" alignment="right" dataType="date" dataField="createdDate"
+                        caption="CreatedDate"></dxi-column>
+                    <dxi-column  [visible]="false" dataField="updateBy" caption="UpdateBy"></dxi-column>
+                    <dxi-column dataField="updateDate" [visible]="false" dataType="date" alignment="right" [width]="120">
+                    </dxi-column>
+
+                    <dxi-column  [showInColumnChooser]="false" [allowFiltering]="false"
+                        [allowSorting]="false" cellTemplate="buttonDeleteCellTemplate">
+                    </dxi-column>
+                    <div *dxTemplate="let data of 'buttonDeleteCellTemplate'" width="100">
+                        <button class="btn  btn-outline-info  iconbox  me-2 iconbox-xxs" ngbTooltip="View & Update"
+                            (click)="onMaterialSelect(data.data)">
+                            <i class="mdi mdi-pencil"></i>
+                        </button>
+                    </div>
+                    <dxo-export [enabled]="true" fileName="Material"></dxo-export>
+                </dx-data-grid>
+
+            </div>
+        </div>
+    </div>
+</div>

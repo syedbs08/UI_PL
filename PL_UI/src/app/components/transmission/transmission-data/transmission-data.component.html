@@ -1,0 +1,139 @@
+<app-header-breadcrumb [title]="'TRANSMISSION'" [items]="['Transmission']" [showAddNew]="false" [showExport]="false"
+ [active_item]="'Transmission'"></app-header-breadcrumb>
+ <div class="card"  [(ngbCollapse)]="isClosed8">
+    <div class="card-header ">
+        <h3 class="card-title ">Transmission</h3>
+        <div class="card-options">
+            <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                [attr.aria-expanded]="!isCollapsed8">
+                <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-2" [(ngbCollapse)]="isCollapsed8">
+
+<form [formGroup]="tranmissionForm">
+    
+        <div class="row">
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group">
+                    <label class="form-label">Plan Type<span class="text-red">*</span></label>
+                    <ng-select [items]="planTypeList" bindLabel="planTypeName"
+                        class="select2 custom-select"  (change)="onChangeSaleType(f.PlanTypeCode?.value,f.SalesType?.value)" bindValue="planTypeCode" formControlName="PlanTypeCode"
+                        placeholder="Plan Type">
+                    </ng-select>
+                    <div *ngIf="submitted && f.PlanTypeCode.errors" class="text-danger">
+                        <div *ngIf="f.PlanTypeCode.errors.required">Please select Plan Type
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group ">
+                    <div class="form-label">Sales Type <span class="text-red">*</span></div>
+                    <div class="custom-controls-stacked">
+                        <label class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input"  (change)="onChangeSaleType(f.PlanTypeCode?.value,f.SalesType?.value)" name="SalesType" value="Monthly"
+                                checked formControlName="SalesType">
+                            <span class="custom-control-label">Monthly</span>
+                        </label>
+                        <label class="custom-control custom-radio">
+                            <input type="radio"   (change)="onChangeSaleType(f.PlanTypeCode?.value,f.SalesType?.value)" class="custom-control-input" name="SalesType" value="BP"
+                                formControlName="SalesType">
+                            <span class="custom-control-label">BP</span>
+                        </label>
+                        <div *ngIf="submitted && f.SalesType.errors" class="text-danger">
+                            <div *ngIf="f.SalesType.errors.required">Please select Sales Type
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group">
+                    <label class="form-label">Customer<span class="text-red">*</span></label>
+                    <ng-select [items]="customerlist"  bindLabel="customerName"
+                            class="select2 custom-select" bindValue="customerCode" formControlName="CustomerCode"
+                            placeholder="Customer">
+                        </ng-select>
+                        <div *ngIf="submitted && f.CustomerCode.errors" class="text-danger">
+                            <div *ngIf="f.CustomerCode.errors.required">Please select Customer
+                            </div>
+                        </div>
+                </div>
+            </div>
+    
+        
+        <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+                <label class="form-label">Result Month<span class="text-red">*</span></label>
+                <input type="text" class="form-control"  [readOnly]="true"  
+                formControlName="ResultMonth" />
+                <div *ngIf="submitted && f.ResultMonth.errors" class="text-danger">
+                    <div *ngIf="f.ResultMonth.errors.required">Please enter Month
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+                <label class="form-label">Period From</label>
+                <input type="text" class="form-control"  [readOnly]="true"
+                formControlName="PeriodFrom" />
+                <div *ngIf="submitted && f.PeriodFrom.errors" class="text-danger">
+                    <div *ngIf="f.PeriodFrom.errors.required">Please enter Period From
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+                <label class="form-label">Period To</label>
+                <input type="text" class="form-control" [readOnly]="true"
+                formControlName="PeriodTo" />
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 mt-5">
+            <label class="form-label"></label>
+           
+            <button type="button" class="btn btn-default-light pull-right mx-2" (click)="resetForm()">
+                <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+                <button [disabled]="loading" class="btn btn-indigo pull-right"  type="button" (click)="onSubmit()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+          
+                <div class="card-body " [(ngbCollapse)]="isCollapsed8">
+                    <dx-data-grid  id="grid" [dataSource]="transmissionList" columnResizingMode="widget" 
+                         [allowColumnResizing]="true" [showBorders]="true">
+                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                        <dxo-paging [pageSize]="20"></dxo-paging>
+                        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                        <dxi-column   dataField="planTypeCode" caption="Type">
+                        </dxi-column>
+                        <dxi-column dataField="planTypeName" caption="File Desc"></dxi-column>
+                        <dxi-column dataField="customerCode" caption="Customer Code"></dxi-column>
+                        <dxi-column dataField="customerName" caption="Customer Name"></dxi-column>
+                        <dxi-column dataField="saleType" caption="Sale Type"></dxi-column>
+                        <dxi-column dataField="status" caption="Status"></dxi-column>
+                        <dxi-column dataField="ediStatus" caption="EDI Status"></dxi-column>
+                    </dx-data-grid>
+                </div>
+        
+            
+        </div><!-- COL END -->
+        
+        </div>
+</form>
+
+
+

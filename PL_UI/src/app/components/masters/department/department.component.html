@@ -1,0 +1,141 @@
+<app-header-breadcrumb [title]="'DEPARTMENT MASTER'" [items]="['Masters']" [showExport]="false"
+  (openPopUp)="onAddNewClick($event)" [active_item]="'Department'"></app-header-breadcrumb>
+
+<ng-template #departmentEntryPopup let-modal>
+  <form [formGroup]="departmentForm">
+    <div class="modal-header">
+      <h5 class="modal-title text-primary fw-semibold"> <span>
+        </span>Department </h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-sm-6 col-md-12">
+          <div class="form-group">
+            <label class="form-label">Department Code <span class="text-red">*</span></label>
+            <input type="text" class="form-control" maxlength="10" placeholder="Deparment code"
+              formControlName="DepartmentCode">
+            <div *ngIf="submitted && f.DepartmentCode.errors" class="text-danger">
+              <div *ngIf="f.DepartmentCode.errors.required">Please enter department code
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 col-md-12">
+          <div class="form-group">
+            <label class="form-label">Department Name <span class="text-red">*</span></label>
+            <input type="text" class="form-control" maxlength="100" placeholder="Department name"
+              formControlName="DepartmentName">
+            <div *ngIf="submitted && f.DepartmentName.errors" class="text-danger">
+              <div *ngIf="f.DepartmentName.errors.required">Please enter department name
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 col-md-12">
+          <div class="form-group">
+            <label class="form-label">Deparment Short Desc</label>
+            <input type="text" class="form-control" maxlength="200" placeholder="Department name"
+              formControlName="DepartmentDescription">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 col-md-12">
+          <div class="form-group">
+            <label class="form-label">Map Countries <span class="text-red">*</span></label>
+            <div class="form-group">
+              <ng-select [items]="CountryList" bindLabel="countryName" class="select2 custom-select"
+                bindValue="countryId" [multiple]="true" formControlName="CountryId"
+                placeholder="Select from list or enter new country ">
+              </ng-select>
+              <div *ngIf="submitted && (!departmentForm.value.CountryId || departmentForm.value.CountryId.length==0)"
+                class="text-danger">
+                Please select country
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 col-md-12">
+          <div class="form-group">
+            <label class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" formControlName="IsActive">
+              <span class="custom-control-label">Active</span>
+            </label>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default-light" (click)="resetForm()">
+        <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+      <button [disabled]="loading" type="button" class="btn btn-indigo" (click)="onSubmit()"
+        [style.pointer-events]="loading?'none':''">
+        <i class="fe fe-check" *ngIf="!loading"> </i>
+        <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+        &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+      </button>
+
+    </div>
+  </form>
+</ng-template>
+
+
+<div class="row">
+  <div class="col-md-12 col-lg-12">
+    <div class="card " [(ngbCollapse)]="isClosed8">
+        <div class="card-header ">
+            <h3 class="card-title ">Department List</h3>
+            <div class="card-options">
+                <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                    [attr.aria-expanded]="!isCollapsed8">
+                    <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+                </a>
+
+            </div>
+        </div>
+        <div class="card-body " [(ngbCollapse)]="isCollapsed8">
+            <dx-data-grid  id="grid"  #dataGrid [dataSource]="departmentList" columnResizingMode="widget"  [allowColumnResizing]="true"
+            [remoteOperations]="true" [showBorders]="true">
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true" alignment="right"></dxo-header-filter>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+              <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+              <dxi-column   dataField="departmentCode" caption="Department Code"></dxi-column>
+              <dxi-column dataField="departmentName" caption="Department Name"></dxi-column>
+              <dxi-column  dataField="departmentDescription" caption="Department Short Desc"></dxi-column>
+              <dxi-column   [calculateCellValue]="mapDeparmentCompanies" caption="Mapped Countries"></dxi-column>
+              <dxi-column dataField="isActive" [showEditorAlways]='false' [customizeText]='customizeText' caption="Is Active"></dxi-column>
+              <dxi-column [allowFiltering]="false" [allowSorting]="false" cellTemplate="buttonDeleteCellTemplate">
+              </dxi-column>
+              <div *dxTemplate="let data of 'buttonDeleteCellTemplate'" >
+                  <button class="btn  btn-outline-info  iconbox  me-2 iconbox-xxs" ngbTooltip="View & Update"
+                      (click)="onEdiDepartment(data.data)">
+                      <i class="mdi mdi-pencil"></i>
+                  </button>
+                  <button class="btn  btn-outline-danger text-danger   iconbox iconbox-xxs mr-3 "
+                  (click)="onDepartmentSelectDelete(data.data)" ngbTooltip="Remove">
+                      <i class="fa fa-close "></i>
+                  </button>
+              </div>
+              <dxo-export [allowExportSelectedData]="false"  [enabled]="true" [fileName]="departmentFileName"></dxo-export>
+          </dx-data-grid>
+
+      </div>
+
+    </div>
+  </div><!-- COL END -->
+
+</div>

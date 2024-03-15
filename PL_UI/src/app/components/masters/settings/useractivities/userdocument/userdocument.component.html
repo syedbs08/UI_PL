@@ -1,0 +1,118 @@
+<app-header-breadcrumb [title]="'Users Files'" [showAddNew]="false" [items]="['Users Files']"
+    [showExport]="false"></app-header-breadcrumb>
+<div class="card">
+    <div class="card-header pl-0 ">
+        <h3 class="card-title pl-0 "> Document List</h3>
+
+    </div>
+
+    <div class="card-body p-2">
+
+
+        <div class="row">
+           
+            <div class="col-sm-6 col-md-3" *ngIf="isSuperAdmin">
+                <div class="form-group">
+                    <label class="form-label mt-0">User <span class="text-red">*</span></label>
+                    <ng-select [items]="users" bindLabel="name" class="select2 custom-select" bindValue="userId"
+                        placeholder="user " [(ngModel)]="selectedUser">
+                    </ng-select>
+                    <div *ngIf="submitted && !selectedUser" class="text-danger">
+                        Please select user
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group">
+                    <label class="form-label mt-0">Month <span class="text-red">*</span></label>
+                    <div class="input-group">
+
+                        <input [matDatepicker]="dp" [formControl]="selectedMonth" (click)="dp.open()"
+                            (focus)="dp.open()" class="form-control">
+                        <mat-datepicker #dp startView="multi-year" (yearSelected)="chosenYearHandler($event)"
+                            (monthSelected)="chosenMonthHandler($event, dp)">
+                        </mat-datepicker>
+
+                    </div>
+                    <!-- <div class="input-group">
+                        <div class="input-group-text">
+                            <i class="fa fa-calendar tx-16 lh-0 op-6"></i>
+                        </div>
+                        <input class="form-control" placeholder="yyyyMM" name="dp" [(ngModel)]="selectedMonth" ngbDatepicker
+                            (click)="d.toggle()" #d="ngbDatepicker" autocomplete="off">
+                    </div> -->
+                    <div *ngIf="submitted && !selectedMonth" class="text-danger">
+                        Please select month
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group">
+                    <label class="form-label mt-0"> <span class="text-white">*</span></label>
+                    <button [disabled]="loading || searching" class="btn btn-indigo" type="button" (click)="onSearch()"
+                        [style.pointer-events]="loading?'none':''">
+                        <i class="fe fe-check" *ngIf="!loading"> </i>
+                        <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                        &nbsp; {{loading? 'Searching' : ' Search'}} &nbsp;
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<div class="card-alert alert  alert-info mb-0" *ngIf="noDataMessage && noDataMessage.length>0">
+    {{noDataMessage}}
+</div>
+
+<div class="row" *ngIf="Folders && (!filteredFile || filteredFile.length==0)">
+    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3" *ngFor="let item of Folders">
+        <div class="card">
+            <div class="card-body my-card" (click)="onFolderSelect(item)">
+                <div class="card-order">
+
+                    <h6 class="mb-2">{{item.displayName}}</h6>
+                    <h2 class="text-end " (click)="onFolderSelect(item)"><i class="fa fa-folder-o icon-size 
+                                    float-start text-primary text-primary-shadow"></i>
+                        <a href="javascript:;" (click)="onFolderSelect(item)">
+                            <span class="text-primary-shadow">{{getMonthCount(item.folderName)}}</span></a>
+                    </h2>
+                    <!-- <p class="mb-0">Month<span class="float-end">{{item.documentMonth}}</span></p> -->
+
+                </div>
+            </div>
+        </div>
+    </div><!-- COL END -->
+
+</div>
+<div class="row" *ngIf="filteredFile && filteredFile.length>0">
+    <div class="col-md-12 col-lg-12">
+        <div class="card ">
+            <div class="card-header ">
+                <h5 class="card-title text-primary">{{selectedFolder.displayName}}</h5>
+
+                <div class="ms-auto pageheader-btn">
+
+                    <button class="btn btn-primary btn-sm float-lg-end " (click)="GoBack()">Go Back</button>
+                </div>
+
+            </div>
+            <div class="card-body ">
+                <app-userfiles [fileList]="filteredFile"></app-userfiles>
+            </div>
+        </div>
+    </div>
+
+</div>

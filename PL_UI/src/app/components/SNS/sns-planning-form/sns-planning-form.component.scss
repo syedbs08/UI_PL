@@ -1,0 +1,62 @@
+// ::ng-deep #gridContainer {
+//     height: 100vh;
+//   }
+  
+  #dvgrid.fullscreen{
+    z-index: 9999; 
+    width: 100%; 
+    height: 100%; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+ }
+//  .card-body{
+//   height: 100vh;
+//   overflow-y:  scroll !important;
+//  }
+// ::-webkit-scrollbar-thumb {
+//   background-color: #333 !important; /* Change the color of the scrollbar thumb */
+//   border-radius: 8px; /* Optionally, you can add rounded corners to the scrollbar thumb */
+// }
+ /* In your component's CSS file */
+:host ::ng-deep {
+  .dx-datagrid-rowsview .dx-row.dx-group-row:not(.dx-row-focused) {
+    background-color: #009688 !important;
+}
+.dx-datagrid-group-closed {
+  color: white !important;
+}
+.dx-datagrid-group-opened{
+  color: white !important;
+}
+  .dx-scrollbar-hoverable.dx-scrollable-scrollbar-active .dx-scrollable-scroll-content {
+    background-color: black !important; 
+    width: 20px !important;
+
+    /* Additional styles */
+  }
+  .dx-scrollbar-hoverable .dx-scrollable-scroll.dx-state-invisible .dx-scrollable-scroll-content {
+    background-color: black !important; 
+}
+.dx-scrollable-scroll-content {
+  background-color: black !important; 
+}
+.dx-datagrid .dx-row > td {
+  padding: 2px !important;
+}
+.dx-datagrid-rowsview .dx-texteditor-input {
+  padding: 0px !important;
+  min-height: 15px !important;
+}
+.dx-datagrid {
+  margin-left: 12PX !important;
+  margin-top: 4PX !important;
+}
+ }
+ 
+
+
+
+
+
+

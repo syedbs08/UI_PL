@@ -1,0 +1,234 @@
+<app-header-breadcrumb [title]="'REPORT'" [items]="['NonConsolidated']" [active_item]="'NonConsolidated Report'"
+[showAddNew]="true"  (openPopUp)="onAddNewClick($event)" addButtonTitle="Save as Variant">
+</app-header-breadcrumb>
+<ng-template #variantEntryModal let-modal>
+    <form [formGroup]="variantForm">
+        <div class="modal-header">
+            <h5 class="modal-title text-primary fw-semibold"> <span>
+                </span>Variant </h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6 col-md-12">
+                    <div class="form-group">
+                        <label class="form-label">Variant Name <span class="text-red">*</span></label>
+                        <input type="text" class="form-control" placeholder="Variant Name" formControlName="VariantName">
+                        <div *ngIf="submittedVariant && variantf.VariantName.errors" class="text-danger">
+                            <div *ngIf="variantf.VariantName.errors.required">Please enter Variant name
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+        <div class="modal-footer">
+    
+            <button [disabled]="loading" class="btn btn-indigo" type="button" (click)="onSaveAsVariant()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Save As Variant'}} &nbsp;
+            </button>
+        </div>
+    </form>
+    </ng-template>
+<div class="card" [(ngbCollapse)]="isClosed8">
+    <div class="card-header ">
+        <h3 class="card-title ">NonConsolidated Report</h3>
+        <div class="card-options">
+            <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                [attr.aria-expanded]="!isCollapsed8">
+                <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-2" [(ngbCollapse)]="isCollapsed8">
+        <form [formGroup]="searchForm">
+            <div class="row">
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="form-label">Department<span class="text-red">*</span></label>
+                        <angular2-multiselect [settings]="customerMultiSelectSettings" formControlName="DepartmentId"
+                            [data]="getDepartment" (ngModelChange)="onDepartmentSelect($event)">
+                        </angular2-multiselect>
+                        <div *ngIf="submitted && f.DepartmentId.errors" class="text-danger">
+                            <div *ngIf="f.DepartmentId.errors.required">Please select department
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="form-label">Country<span class="text-red">*</span></label>
+                        <angular2-multiselect [settings]="customerMultiSelectSettings" formControlName="CountryId"
+                            [data]="getCountry" (ngModelChange)="loadCustomer($event)">
+                        </angular2-multiselect>
+                        <div *ngIf="submitted && f.CountryId.errors" class="text-danger">
+                            <div *ngIf="f.CountryId.errors.required">Please select Country
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Customer</label>
+
+                        <angular2-multiselect [settings]="customerMultiSelectSettings" formControlName="CustomerCode"
+                            [data]="getCustomer">
+                        </angular2-multiselect>
+                        <div *ngIf="submitted && f.CustomerCode.errors" class="text-danger">
+                            <div *ngIf="f.CustomerCode.errors.required">Please select Country
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="form-label">MG1</label>
+                        <ng-select [items]="getMG1" bindLabel="displayName" class="select2 custom-select" bindValue="id"
+                            (change)="loadMg2(f.ProductCategoryId1?.value)" formControlName="ProductCategoryId1"
+                            placeholder="MG1">
+                        </ng-select>
+                        <div *ngIf="submitted && f.ProductCategoryId1.errors" class="text-danger">
+                            <div *ngIf="f.ProductCategoryId1.errors.required">Please select MG
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="form-label">MG2</label>
+                        <ng-select [items]="getMG2" bindLabel="displayName" class=" select2 custom-select"
+                            bindValue="id" formControlName="ProductCategoryId2" placeholder="MG2">
+                        </ng-select>
+                        <div *ngIf="submitted && f.ProductCategoryId2.errors" class="text-danger">
+                            <div *ngIf="f.ProductCategoryId2.errors.required">Please select MG2
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="form-label">From Month<span class="text-red">*</span></label>
+                        <input [matDatepicker]="fromDp" [formControl]="fromMonth" (click)="fromDp.open()"
+                            (focus)="fromDp.open()" class="form-control">
+                        <mat-datepicker #fromDp startView="multi-year" (yearSelected)="chosenFromYearHandler($event)"
+                            (monthSelected)="chosenFromMonthHandler($event, fromDp)">
+                        </mat-datepicker>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="form-label">To Month<span class="text-red">*</span></label>
+                        <input [matDatepicker]="toDp" [formControl]="toMonth" (click)="toDp.open()"
+                            (focus)="toDp.open()" class="form-control">
+                        <mat-datepicker #toDp startView="multi-year" (yearSelected)="chosenToYearHandler($event)"
+                            (monthSelected)="chosenToMonthHandler($event, toDp)">
+                        </mat-datepicker>
+
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-1">
+                    <div class="form-group">
+                        <div class="form-label">Type<span class="text-red">*</span></div>
+                        <div class="custom-controls-stacked">
+                            <label class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="SalesSubType" value="Monthly"
+                                    checked formControlName="SalesSubType">
+                                <span class="custom-control-label">Monthly</span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="SalesSubType" value="BP"
+                                    formControlName="SalesSubType">
+                                <span class="custom-control-label">BP</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="form-label">Additional Fields</label>
+                        <ng-select [items]="getAdditional" bindLabel="name" [multiple]="true"
+                            class=" select2 custom-select" bindValue="id" formControlName="AdditionalValue"
+                            placeholder="Additional Fields">
+                        </ng-select>
+
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="form-label">Report Variant</label>
+                        <ng-select [items]="getReportVariant" bindLabel="variantName" class=" select2 custom-select"
+                            bindValue="variantName" formControlName="Variant" placeholder="Report Variant">
+                        </ng-select>
+
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-1">
+                    <div class="form-group">
+                        <label class="form-label col-md-12">Currency</label>
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" id="Active" class="custom-control-input" formControlName="IsUSD">
+                            <span class="custom-control-label">USD</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2  mt-5">
+                    <label class="form-label"></label>
+                    <button type="button" class="btn    btn-default-light pull-right" (click)="reload()">
+                        <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+                    <button [disabled]="loading" class="btn  btn-indigo pull-right" type="button" (click)="onSearch()"
+                        [style.pointer-events]="loading?'none':''">
+                        <i class="fe fe-check" *ngIf="!loading"> </i>
+                        <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                        &nbsp; {{loading? 'Submitting' : ' Search'}} &nbsp;
+                    </button>
+
+                </div>
+            </div>
+        </form>
+        <form [formGroup]="expandForm" *ngIf="expenddata">
+            <div class="row">
+
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" id="Active" class="custom-control-input"
+                                (change)="expandAllRows($event)" formControlName="IsExpand">
+                            <span class="custom-control-label">Expand/Collapse</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" id="Active" class="custom-control-input"
+                                (change)="dataFieldHeaderClick($event)" formControlName="IsHeader">
+                            <span class="custom-control-label">Data Field Headers in Rows</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-7">
+                    <button [disabled]="loading" class="btn btn-indigo pull-right mb-1" type="button" (click)="onSave()"
+                        [style.pointer-events]="loading?'none':''">
+                        <i class="fe fe-check" *ngIf="!loading"> </i>
+                        <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                        &nbsp; {{loading? 'Submitting' : 'Save Variant'}} &nbsp;
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-sm-6 col-md-12">
+                <dx-pivot-grid [allowSortingBySummary]="true" [allowSorting]="true" [allowFiltering]="true"
+                    [allowExpandAll]="true" [height]="490" [showBorders]="true" [dataSource]="dataSource"
+                    [dataFieldArea]="rowsDataFieldArea ? 'row' : 'column'"  (onExporting)="onExporting($event)">
+                    <dxo-scrolling mode="virtual" rowRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-export [enabled]="true" ></dxo-export>
+                </dx-pivot-grid>
+            </div>
+        </div>
+    </div>
+</div>

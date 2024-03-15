@@ -1,0 +1,212 @@
+<app-header-breadcrumb [title]="'Role Management'" [items]="['Settings']" [showExport]="false"
+    (openPopUp)="onAddNewClick($event)" [active_item]="'Role Management'" [showAddNew]="showAddNewButton" 
+    [showOtherButton]="showOtherButton" otherIcon="fa fa-step-backward" (onOtherButtonclick)="backButton()" OtherButtonTitle="Go Back"></app-header-breadcrumb>
+
+<form [formGroup]="menuForm">
+
+    <div class="card" *ngIf="showEntryScreen">
+
+        <div class="card-header">
+            <h3 class="card-title">Manage Roles & Menus</h3>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <label class="form-label">Parent Menu
+                        <span class="text-red">*</span> <i class="fe fe-info ms-2"
+                            ngbTooltip="select existing menu or enter menu name and click Add item"></i>
+                    </label>
+                    <div class="form-group">
+                        <ng-select [items]="menuLookupList" bindLabel="title" class=" select2 custom-select"
+                            ngbTooltip="To create new menu please enter menu name and click on Add Item "
+                            bindValue="title" [addTag]="addNewParent" [multiple]="false" formControlName="ParentMenu"
+                            (change)="onParentMenuSelect($event)" placeholder="Select from list or enter new menu ">
+                        </ng-select>
+                        <div *ngIf="submitted && f.ParentMenu.errors" class="text-danger">
+                            <div *ngIf="f.ParentMenu.errors.required">Please enter or select parent menu
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6" *ngIf="selectedMenu">
+                    <div class="form-group">
+                        <div class="col-sm-6 col-md-12">
+                            <label class="form-label">Icon <span class="text-red">*</span></label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" formControlName="Icon">
+                                <div *ngIf="submitted && f.Icon.errors" class="text-danger">
+                                    <div *ngIf="f.Icon.errors.required">Please enter parent icon
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row" *ngIf="selectedMenu">
+                <div class="col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Role<span class="text-red">*</span></label>
+                        <div class="form-group">
+                            <ng-select [items]="menuRoles" bindLabel="displayName"
+                                class=" select2 custom-select" bindValue="value" [multiple]="true"
+                                formControlName="Roles" placeholder="Select from list or enter new menu ">
+                            </ng-select>
+                            <div *ngIf="submitted && f.Roles.errors" class="text-danger">
+                                <div *ngIf="f.Roles.errors.required">Please select roles
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Order <span class="text-red">*</span></label>
+                        <div class="form-group">
+                            <input type="text" class="form-control"  formControlName="Order">
+                            <div *ngIf="submitted && f.Order.errors" class="text-danger">
+                                <div *ngIf="f.Order.errors.required">Please enter order of parent menu
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="selectedMenu">
+                <div class="col-md-12">
+                    <!-- <div>
+                    <h3 class="card-title mb-1">Sub Menu</h3>
+                </div> -->
+                    <div class="table-responsive">
+                        <table formArrayName="ChildMenus"
+                            class="table border text-nowrap text-md-nowrap table-striped mg-b-0">
+                            <thead class="bg-default">
+                                <tr>
+                                    <th class="col-md-4">
+                                        Sub Menu
+
+                                    </th>
+                                    <th class="col-md-5">
+                                        Roles
+
+                                    </th>
+                                    <th class="col-md-4">
+                                        Url
+
+                                    </th>
+                                    <th class="col-md-1">
+                                        <button class="btn  btn-outline-primary  iconbox iconbox-sm mr-3"  (click)="addItem()"  ngbTooltip="Add child menu">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of  getChildControls();let i = index;" [formGroupName]="i">
+                                    <td>
+                                        <input type="text" formControlName="Title" class="form-control">
+
+                                        <div *ngIf="submitted && childMenusForm.controls[i].get('Title')?.errors?.required" class="text-danger">
+                                           Menu title can not be blanked</div>
+                                      
+                                    </td>
+                                    <td>
+                                        <ng-select [items]="menuRoles" bindLabel="displayName"
+                                            class="form-control select2 custom-select" bindValue="value"
+                                            [multiple]="true" formControlName="Roles"
+                                            placeholder="Select from list or enter new menu ">
+                                        </ng-select>
+
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" formControlName="Url">
+                                        <div *ngIf="submitted && childMenusForm.controls[i].get('Url')?.errors?.required" class="text-danger">
+                                            Page url can not be blanked</div>
+                                    </td>
+                                    <td>
+                                       
+                                        <button class="btn  btn-outline-danger text-danger   iconbox iconbox-sm mr-3 " (click)="DeleteRow(i)" *ngIf="i>0"
+                                            ngbTooltip="Remove">
+                                            <i class="fa fa-close " ></i>
+
+                                        </button>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="card-footer ">
+            <button [disabled]="loading" class="btn  btn-indigo float-end " type="button" (click)="onSubmit()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+            </button>
+
+            <button type="button" class="btn    btn-default-light float-end " (click)="onCancel()">
+                <i class="fe fe-x-circle"></i> &nbsp;Cancel &nbsp;</button>
+
+
+        </div>
+    </div>
+</form>
+
+<div class="row" *ngIf=" !showEntryScreen">
+    <div class="col-md-12 col-lg-12">
+        <div class="card " [(ngbCollapse)]="isClosed8">
+            <div class="card-header ">
+                <h3 class="card-title ">Role List</h3>
+                <div class="card-options">
+                    <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                        [attr.aria-expanded]="!isCollapsed8">
+                        <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+                    </a>
+
+                </div>
+            </div>
+            <div class="card-body " [(ngbCollapse)]="isCollapsed8">
+                <dx-data-grid  id="grid" [dataSource]="menulist" columnResizingMode="widget"  [allowColumnResizing]="true" [remoteOperations]="true" [showBorders]="true">
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-header-filter [visible]="true" alignment="right"></dxo-header-filter>
+                    <dxo-paging [pageSize]="20"></dxo-paging>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                    <dxi-column   dataField="title" caption="Title">
+                    </dxi-column>
+                    <dxi-column  dataField="order" caption="Order"></dxi-column>
+                    <dxi-column   dataField="icon" caption="Icon"></dxi-column>
+                    <dxi-column   dataField="roles" caption="Roles"></dxi-column>
+                    <dxi-column [allowFiltering]="false" [allowSorting]="false" cellTemplate="buttonDeleteCellTemplate">
+                    </dxi-column>
+                    <div *dxTemplate="let data of 'buttonDeleteCellTemplate'" >
+                        <button *ngIf="data.data.title!='Home'"  class="btn  btn-outline-info  iconbox  me-2 iconbox-xxs" ngbTooltip="View & Update"
+                            (click)="onParentMenuSelect(data.data)">
+                            <i class="mdi mdi-pencil"></i>
+                        </button>
+                        <!-- <button *ngIf="data.title!='Home'" class="btn  btn-outline-danger text-danger   iconbox iconbox-xxs mr-3 " 
+                        (click)="onRegionSelectDelete(data.data)" ngbTooltip="Remove">
+                            <i class="fa fa-close "></i>
+                        </button> -->
+                    </div>
+                    <dxo-export [enabled]="true" [fileName]="userListFileName"></dxo-export>
+                </dx-data-grid>
+               
+            </div>
+
+        </div>
+    </div><!-- COL END -->
+
+</div>

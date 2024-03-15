@@ -1,0 +1,21 @@
+<dx-data-grid [allowColumnResizing]="false" id="grid" [dataSource]="fileList" [rowAlternationEnabled]="true"
+    columnResizingMode="widget" [remoteOperations]="true" [showBorders]="true">
+
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-paging [pageSize]="50"></dxo-paging>
+
+    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+    <dxi-column dataField="documentName" caption="Document Name">
+    </dxi-column>
+    <dxi-column dataField="createdDate" caption="Created Date"></dxi-column>
+    <dxi-column [showInColumnChooser]="false" [allowFiltering]="false" [allowSorting]="false"
+        cellTemplate="buttonDeleteCellTemplate">
+    </dxi-column>
+    <div *dxTemplate="let data of 'buttonDeleteCellTemplate'">
+        <button class="btn  btn-outline-info  iconbox  me-2 iconbox-xxs" ngbTooltip="Download"
+            (click)="onDownload(data.data)">
+            <i class="mdi mdi-download"></i>
+        </button>
+    </div>
+
+</dx-data-grid>

@@ -1,0 +1,237 @@
+<app-header-breadcrumb [title]="'Lock PSI'" [items]="['Masters']" [showAddNew]="false"
+    [active_item]="'Lock PSI'"></app-header-breadcrumb>
+<ng-template #lockPSIEntryModal let-modal>
+
+</ng-template>
+<div class="card" [(ngbCollapse)]="isClosed8">
+   
+    <div class="card-body p-2" [(ngbCollapse)]="isCollapsed8">
+        <form [formGroup]="searchForm">
+            <div class="row">
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Users<span class="text-red">*</span></label>
+                        <angular2-multiselect
+                        [settings]="customerMultiSelectSettings"
+                        formControlName="UserIds"
+                        [data]="getUsers"
+                         ></angular2-multiselect>
+                       
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Customer<span class="text-red">*</span></label>
+                        <angular2-multiselect
+                        [settings]="customerMultiSelectSettings"
+                        formControlName="CustomerId"
+                        [data]="getCustomers"
+                         ></angular2-multiselect>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Sub Category<span class="text-red">*</span></label>
+                        <angular2-multiselect
+                        [settings]="customerMultiSelectSettings"
+                        formControlName="SubcategoryId"
+                        [data]="getMG1"
+                         ></angular2-multiselect>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-3  mt-5">
+                    <label class="form-label"></label>
+                    <button type="button" class="btn  mx-2  btn-default-light pull-right" (click)="reload()">
+                        <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+                    <button [disabled]="loading" class="btn  btn-indigo pull-right" type="button" (click)="onSearch()"
+                        [style.pointer-events]="loading?'none':''">
+                        <i class="fe fe-check" *ngIf="!loading"> </i>
+                        <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                        &nbsp; {{loading? 'Submitting' : ' Search'}} &nbsp;
+                    </button>
+
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" id="Active" class="custom-control-input" formControlName="IsBlock">
+                            <span class="custom-control-label">Block/UnBlock</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                <button [disabled]="loading" class="btn btn-indigo" type="button" (click)="onLock()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Block/UnBlock All User'}} &nbsp;
+            </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="row" *ngIf="showTable">
+    <div class="col-md-12 col-lg-12 pb-0">
+        <div class="card " [(ngbCollapse)]="isClosedList8">
+            <div class="card-header ">
+                <h3 class="card-title ">Lock PSI List</h3>
+                <div class="card-options">
+                    <a href="javascript:;" class="card-options-collapse" (click)="CollapsetoggleList8()"
+                        [attr.aria-expanded]="!isCollapsedList8">
+                        <i class="fe fe-chevron-{{ !isCollapsedList8 ? 'up' : 'down'}}"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-2 pb-0" [(ngbCollapse)]="isCollapsedList8">
+                <div class="row p-2">
+                    <div class="col-sm-12 col-md-12 pb-2 ">
+
+                    </div>
+               
+                    
+                    <dx-data-grid id="grid" [dataSource]="dataList" columnResizingMode="widget" #dataGridRef
+                        [allowColumnResizing]="true"  [showBorders]="true" >
+                        <!-- <dxo-editing [allowUpdating]="true" mode="batch">
+                        </dxo-editing>  -->
+                         <!-- <dxo-column-chooser #columnChooser [enabled]="true" mode="select">
+                        </dxo-column-chooser> -->
+                        <!-- <dxo-selection
+                        [selectAllMode]="allMode"
+                        [showCheckBoxesMode]="checkBoxesMode"
+                        mode="multiple"
+                      ></dxo-selection> -->
+                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                        <!-- <dxo-paging [enabled]="false"></dxo-paging> -->
+                        <dxo-paging [pageSize]="100"></dxo-paging>
+                        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                        <!-- <dxo-scrolling mode="virtual" rowRenderingMode="virtual"></dxo-scrolling> -->
+                        <!-- <dxo-pager [showPageSizeSelector]="true"   [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager> -->
+                        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+
+                        <dxi-column dataField="userId" [visible]="false" [allowEditing]="false"></dxi-column>
+                        <dxi-column dataField="user"  [allowEditing]="false"></dxi-column>
+                        <dxi-column dataField="customerName" caption="Customer" [allowEditing]="false"></dxi-column>
+                        <dxi-column dataField="customerCode" [visible]="false" [allowEditing]="false"></dxi-column>
+                        <dxi-column dataField="productCategoryName" caption="MG1" [allowEditing]="false"></dxi-column>
+                        <dxi-column dataField="subCategoryCode" [visible]="false" [allowEditing]="false"> </dxi-column>
+
+
+                        <dxi-column dataType="boolean" [allowSorting]="false" dataField="opsI_Upload"
+                            headerCellTemplate="opsiheaderTemplate" caption="OPSI">
+
+                        </dxi-column>
+
+                        <div *dxTemplate="let data of 'opsiheaderTemplate'">
+                            <div> OPSI</div>
+                            <dx-check-box id="header" (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+
+                        <dxi-column dataType="boolean" dataField="coG_Upload" [allowSorting]="false"
+                            headerCellTemplate="cogheaderTemplate" caption="COG"></dxi-column>
+                        <div *dxTemplate="let data of 'cogheaderTemplate'">
+                            <div> COG </div><dx-check-box
+                                (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+                        <dxi-column dataType="boolean" headerCellTemplate="O-COheaderTemplate" [allowSorting]="false"
+                            dataField="o_LockMonthConfirm" caption="O-CO Confirm"></dxi-column>
+
+                        <div *dxTemplate="let data of 'O-COheaderTemplate'">
+                            <div> O-Lock Confirm </div><dx-check-box
+                                (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+                        <dxi-column dataType="boolean" headerCellTemplate="oC_IndiheaderTemplate" [allowSorting]="false"
+                            dataField="oC_IndicationMonth" caption="OC Confirm"></dxi-column>
+                        <div *dxTemplate="let data of 'oC_IndiheaderTemplate'">
+                            <div> OC Confirm</div> <dx-check-box
+                                (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+                        <dxi-column dataType="boolean" headerCellTemplate="BP_UploadheaderTemplate"
+                            [allowSorting]="false" dataField="bP_Upload_DirectSale" caption="BP Upload DS"></dxi-column>
+                        <div *dxTemplate="let data of 'BP_UploadheaderTemplate'">
+                            <div> BP Upload DS </div><dx-check-box
+                                (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+
+                        <dxi-column dataType="boolean" [allowSorting]="false" dataField="bP_Upload_SNS"
+                            headerCellTemplate="BP_UploadSNSheaderTemplate" caption="BP Upload SNS">
+                        </dxi-column>
+                        <div *dxTemplate="let data of 'BP_UploadSNSheaderTemplate'">
+                            <div> BP Upload SNS </div><dx-check-box
+                                (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+                        <dxi-column dataType="boolean" [allowSorting]="false" dataField="bP_COG_Upload"
+                            headerCellTemplate="BPCOGUploadheaderTemplate" caption="BP COG Upload">
+                        </dxi-column>
+                        <div *dxTemplate="let data of 'BPCOGUploadheaderTemplate'">
+                            <div> BP COG Upload </div><dx-check-box
+                                (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+                        <dxi-column dataType="boolean" dataField="adJ_Upload" [allowSorting]="false"
+                            headerCellTemplate="ADJheaderTemplate" caption="ADJ Upload">
+                        </dxi-column>
+                        <div *dxTemplate="let data of 'ADJheaderTemplate'">
+                            <div> ADJ Upload </div><dx-check-box
+                                (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+                        <dxi-column dataType="boolean" [allowSorting]="false" dataField="ssD_Upload"
+                            headerCellTemplate="SSDheaderTemplate" caption="SSD Upload">
+                        </dxi-column>
+                        <div *dxTemplate="let data of 'SSDheaderTemplate'">
+                            <div> SSD Upload </div><dx-check-box
+                                (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+                        <dxi-column dataType="boolean" [allowSorting]="false" dataField="snS_Sales_Upload"
+                            headerCellTemplate="SNSSalesheaderTemplate" caption="SNS Sales Upload">
+                        </dxi-column>
+                        <div *dxTemplate="let data of 'SNSSalesheaderTemplate'">
+                            <div> SNS Sales Upload </div><dx-check-box
+                                (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+                        <!-- <dxi-column dataType="boolean" [allowSorting]="false" dataField="forecast_Projection"
+                            caption="Forecast Projection" headerCellTemplate="ForecastheaderTemplate">
+                        </dxi-column> -->
+                        <div *dxTemplate="let data of 'ForecastheaderTemplate'">
+                            <div> Forecast Projection </div><dx-check-box
+                                (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+                        <dxi-column dataType="boolean" [allowSorting]="false" dataField="snS_Planning"
+                            headerCellTemplate="SNSPlanningheaderTemplate" caption="SNS Planning">
+                        </dxi-column>
+                        <div *dxTemplate="let data of 'SNSPlanningheaderTemplate'">
+                            <div> SNS Planning </div><dx-check-box
+                                (onValueChanged)="handleValueChange($event,data)"></dx-check-box>
+                        </div>
+
+                        <dxo-export [enabled]="true" [fileName]="fileName"></dxo-export>
+
+                        <dxo-toolbar>
+                            <dxi-item location="after">
+                                <div *dxTemplate>
+                                    <button [disabled]="loading" class="btn  btn-indigo pull-right" type="button"
+                                        (click)="onSubmitLock()" [style.pointer-events]="loading?'none':''">
+                                        <i class="fe fe-check" *ngIf="!loading"> </i>
+                                        <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                                        &nbsp; {{loading? 'Submit' : ' Submit'}} &nbsp;
+                                    </button>
+
+
+                                </div>
+                            </dxi-item>
+
+
+                            <dxi-item name="exportButton"></dxi-item>
+
+                            <dxi-item name="columnChooserButton"></dxi-item>
+                            <dxi-item name="searchPanel"></dxi-item>
+                        </dxo-toolbar>
+                    </dx-data-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+:host ::ng-deep {
+    .dx-scrollable-scroll.dx-state-invisible {
+        background-color: black !important;
+    }
+    .dx-scrollbar-hoverable .dx-scrollable-scroll.dx-state-invisible .dx-scrollable-scroll-content
+    {
+        background-color: black !important;
+    }
+    .dx-scrollable-scroll-content{
+        background-color: black !important;
+    }
+
+}

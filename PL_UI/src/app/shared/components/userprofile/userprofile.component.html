@@ -1,0 +1,59 @@
+<div class="wideget-user" *ngIf="userDetails">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xl-6">
+
+
+            <div class="wideget-user-desc d-sm-flex">
+                <div class="wideget-user-img">
+                    <app-profile-photo [userObjectId]="userObjectId" [DisplayName]="userDetails.displayName"
+                        [UserPrincipalName]="userDetails.userPrincipalName" [smallSize]="false"></app-profile-photo>
+                </div>
+                <div class="user-wrap">
+                    <h2 class="text-primary">{{userDetails.displayName}}</h2>
+                    <!-- <h5 class="text-muted mb-3 text-dark">Roles: {{roles.toString()}}</h5> -->
+                    <h6 class="text-muted mb-3 text-dark">Email: {{userDetails?.mail==null?'NA':userDetails?.mail}}</h6>
+                    <h6 class="text-muted mb-3 text-dark">Job Titles:
+                        {{userDetails?.jobTitle===null?'NA':userDetails?.jobTitle}}</h6>
+                        <h6 class="text-muted mb-3 text-dark">Mobile: {{userDetails?.mobilePhone==null?'NA':userDetails?.mobilePhone}}</h6>
+                        
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-lg-12 col-md-12 col-xl-6">
+            <div class="main-profile-contact-list float-lg-end d-lg-flex">
+                <div class="me-5">
+                    <div class="media">
+                        <div class="media-icon bg-primary  me-3 mt-1">
+                            <i class="fe fe-file-plus fs-20 text-white"></i>
+                        </div>
+                        <div class="media-body">
+                            <span class="text-muted">Department(s)</span>
+                            <div class="fw-semibold fs-25">
+                              <span *ngIf="assingDept">{{assingDept}}</span>
+                              <span *ngIf="!assingDept">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="me-5 mt-5 mt-md-0">
+                    <div class="media">
+                        <div class="media-icon bg-success me-3 mt-1">
+                            <i class="fe fe-users  fs-20 text-white"></i>
+                        </div>
+                        <div class="media-body">
+                            <span class="text-muted">Product(s)</span>
+                            <div class="fw-semibold fs-25">
+                              <span *ngIf="assingProductMap">{{assingProductMap}}</span>
+                              <span *ngIf="!assingProductMap">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

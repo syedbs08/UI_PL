@@ -1,0 +1,18 @@
+{
+  "urlMaster": "https://psidevwebapp.azurewebsites.net/api/v1/masters/",
+  "urlDirectSale": "https://psidevwebapp.azurewebsites.net/api/v1/directsales/",
+  "urlSNS": "https://psidevwebapp.azurewebsites.net/api/v1/sns/",
+  "urlAdjustment": "https://psidevwebapp.azurewebsites.net/api/v1/adjustment/",
+  "urlCOG": "https://psidevwebapp.azurewebsites.net/api/v1/cog/",
+  "urlAuth": "https://psidevwebapp.azurewebsites.net/api/v1/authentication/",
+  "urlAttachment": "https://psidevwebapp.azurewebsites.net/api/v1/attachment/",
+  "urlTransmission": "https://psidevwebapp.azurewebsites.net/api/v1/transmission/",
+  "urlReport": "https://psidevwebapp.azurewebsites.net/api/v1/report/",
+  "clientId": "41c26c7a-e4bd-4467-be53-6969f4d151bd",
+  "authority": "https://login.microsoftonline.com/312ca928-514b-41d6-9b98-496fe46e422c/",
+  "redirectUrl": "https://psispaapp.azurewebsites.net/",
+  "scopes": [
+      "api://0880c9b9-1bfa-4573-a7a6-2d12f97934d3/api.readwrite"
+  ],
+  "endpoint": "https://psidevwebapp.azurewebsites.net/"
+}

@@ -1,0 +1,29 @@
+
+.modal-body{
+    height: 60vh  !important;
+    overflow-y: auto  !important;
+}
+.dx-scrollbar-hoverable {
+    background-color:#00000057 !important;
+  }
+  .alert {
+    padding: 7px 1rem  !important;
+  }
+  .alert-dismissible .btn-close {
+    padding: 7px 1.25rem  !important;
+  }
+  .btn-close
+  {
+    padding: 4px 1.25rem  !important;
+  }
+  :host ::ng-deep .block-ui-wrapper{
+   
+    background-color: rgba(249, 244, 244, 0.7);
+    // display: none;
+    // height: 100%;
+    // left: 0;
+    // position: fixed;
+    // top: 0;
+    // width: 100%;
+    // z-index: 999998;
+}

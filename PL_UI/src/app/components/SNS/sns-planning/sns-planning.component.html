@@ -1,0 +1,237 @@
+<!-- <app-header-breadcrumb [title]="'SNS'" [items]="['SNS']" [active_item]="'SNS Planning'" [showAddNew]="false"
+    *ngIf="showheader">
+</app-header-breadcrumb> -->
+
+<form [formGroup]="searchForm" *ngIf="!showPlanning">
+    <div class="card mt-1"  *blockUI="'form-section'">
+        <div class="card-header" *ngIf="showheader">
+            <h3 class="card-title">SNS Planning</h3>
+
+        </div>
+        <div class="card-body" id="entryForm">
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">OAC<span class="text-red">*</span></label>
+                        <ng-select [items]="accountList" bindLabel="displayName" class="select2 custom-select"
+                            bindValue="accountCode" formControlName="AccountCode" placeholder="OAC"
+                            (change)="onCustomerAccountChange()">
+                        </ng-select>
+                        <div *ngIf="(form.AccountCode?.touched && form.AccountCode?.errors)" class="text-danger">
+                            <div *ngIf="form.AccountCode?.errors?.required">Please select OAC</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Sub Group<span class="text-red">*</span></label>
+
+                        <angular2-multiselect [settings]="multipleSettings" formControlName="ProductCategoryId"
+                            [data]="productCategoryList" (ngModelChange)="onProductCategoryChange($event)">
+                        </angular2-multiselect>
+                        <div *ngIf="(form.ProductCategoryId?.touched && form.ProductCategoryId?.errors)"
+                            class="text-danger">
+                            <div *ngIf="form.ProductCategoryId?.errors?.required">Please select Sub Group</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Product Type </label>
+                        <angular2-multiselect [settings]="multipleSettings" formControlName="ProductSubCategoryIdList"
+                            [data]="productSubCategoryList" (ngModelChange)="onProductSubCategoryChange($event)">
+                        </angular2-multiselect>
+
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Search By</label>
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" formControlName="IsWildCardSearch"
+                                (change)="onIsWildCardSearchChange()">
+                            <span class="custom-control-label">Use Wild Card</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group" *ngIf="!isWildCardSearch">
+
+
+                        <label class="form-label">Item Code<span class="text-red">*</span></label>
+                        <div class="input-group">
+                            <dx-drop-down-box formControlName="MaterialIdList"  style="width:90%"
+                            (onValueChanged)="changeItemCode($event)"
+                            [(value)]="gridBoxValue"
+                            [inputAttr]="{ 'aria-label': 'Owner' }"
+                            valueExpr="materialCode"
+                            displayExpr="materialCode"
+                            placeholder="Select a value..."
+                            [showClearButton]="true"
+                            [dataSource]="gridDataSource"
+                          >
+                            <div *dxTemplate="let data of 'content'">
+                              <dx-data-grid
+                                [dataSource]="gridDataSource"
+                                [columns]="[ 'materialCode']"
+                                [selection]="{ mode: 'multiple' }"
+                                [hoverStateEnabled]="true"
+                                [paging]="{ enabled: true, pageSize: 10 }"
+                                [filterRow]="{ visible: true }"
+                                [scrolling]="{ mode: 'virtual' }"
+                                [height]="345"
+                                [(selectedRowKeys)]="gridBoxValue"
+                              >
+                              </dx-data-grid>
+                            </div>
+                          </dx-drop-down-box>
+                            <span class="input-group-text btn btn-primary" (click)="openItemSelectionpopup()"
+                                ngbTooltip="copy paste from excel">
+                                <i class="fa fa-list">
+                                </i>
+                            </span>
+                        </div>
+
+
+
+                        <div *ngIf="(form.MaterialIdList?.touched && form.MaterialIdList?.errors)" class="text-danger">
+                            <div *ngIf="form.MaterialIdList?.errors?.required">Please select Item Code</div>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="isWildCardSearch">
+                        <label class="form-label">Item Code<span class="text-red">*</span></label>
+                        <input type="text" class="form-control" maxlength="100" placeholder="Item Code"
+                            (keypress)="changeItemCode($event)" (change)="getPlannedCustomer()"
+                            formControlName="SearchedMaterialCode">
+                        <div *ngIf="(form.SearchedMaterialCode?.touched && form.SearchedMaterialCode?.errors)"
+                            class="text-danger">
+                            <div *ngIf="form.SearchedMaterialCode?.errors?.required">Please enter Item Code</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Period<span class="text-red">*</span></label>
+                        <ng-select [items]="snsPlanningPeriodList" bindLabel="code" class="select2 custom-select"
+                            bindValue="id" formControlName="PeriodId" placeholder="Period">
+                        </ng-select>
+                        <!-- (change)="getPlannedCustomer()" -->
+                        <div *ngIf="(form.PeriodId?.touched && form.PeriodId?.errors)" class="text-danger">
+                            <div *ngIf="form.PeriodId?.errors?.required">Please select Period</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-8">
+                    <div class="form-group">
+                        <label class="form-label">Customers<span class="text-red">*</span></label>
+                        <div class="col-md-12 p-0">
+                            <angular2-multiselect [settings]="multipleSettings" formControlName="CustomerIdList"
+                                [data]="customerList">
+                            </angular2-multiselect>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4 mt-2">
+                    <div class="form-group">
+                        <label class="form-label"></label>
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" id="Active" class="custom-control-input"
+                                formControlName="IsStockDays">
+                            <span class="custom-control-label">StockDays</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default-light" (click)="clearForm()">
+                <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+            <button [disabled]="loading" class="btn btn-indigo" type="button" (click)="onSearch()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Searching' : ' Search'}} &nbsp;
+            </button>
+        </div>
+    </div>
+</form>
+
+<div *ngIf="showPlanning" >
+    <div class="row">
+        <div class="col-sm-7 col-md-7">
+            <ngb-alert role="alert" type="primary"
+                class="alert show alert-primary fade alert-dismissible ng-star-inserted mt-1">
+                Make sure you click on "Submit Planning" button before you move to another page </ngb-alert>
+        </div>
+        <div class="col-sm-5 col-md-5m ">
+            <button [disabled]="loading" class="btn btn-indigo pull-right mt-1" type="button" (click)="onSubmit()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Submit Planning'}} &nbsp;
+            </button>
+            <button type="button" class="btn btn-warning pull-right  me-2 mt-1" (click)="onPrevious()">
+                <i class="fa fa-step-backward"></i> &nbsp;Go Back &nbsp;</button>
+
+
+        </div>
+    </div>
+    <app-sns-planning-form [snsPlanningSummary]="snsPlanningSummary"
+        (hasChangedData)="detectChanged($event)"></app-sns-planning-form>
+
+</div>
+
+
+<ng-template #itemSelectionModal let-modal>
+
+    <div class="modal-header">
+        <h5 class="modal-title text-primary fw-semibold"> <span>
+                <!-- <i class="fe fe-plus mr-2 "></i> -->
+            </span>Items </h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12 col-md-12">
+                <ngb-alert role="alert" type="primary"
+                    class="alert show alert-primary fade alert-dismissible ng-star-inserted">
+                    Make sure you copy data with column name(first column) . Invalid material(material which does not
+                    belong to selected product type) will not be added in the final list</ngb-alert>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-12">
+                <div type="text" (paste)="onPaste($event)" class="border border-primary" id="dvCopied"
+                    *ngIf="tableItemList.length==0">
+                    Click here & paste excel rows
+                </div>
+                <table class="table table-bordered" *ngIf="tableItemList && tableItemList.length>0">
+                    <thead>
+                        <tr>
+                            <th>ITEMS</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="tableItemList.length>0">
+                        <tr *ngFor="let item of tableItemList">
+                            <td>
+                                {{item}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+
+    </div>
+    <div class="modal-footer">
+
+        <button type="button" class="btn btn-indigo" (click)="clearCopiedItems()">Clear List</button>
+        <button type="button" class="btn btn-primary" (click)="AddCopiedMaterial()">Add Items</button>
+    </div>
+
+</ng-template>

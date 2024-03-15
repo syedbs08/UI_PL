@@ -1,0 +1,25 @@
+<div ngbDropdown class="d-md-flex profile-1" *ngIf="profile">
+    <a href="javascript:;" ngbDropdownToggle class="nav-link pe-2 leading-none d-flex">
+        <span>
+            <img [src]="profile.profilePhotos" alt="profile-user" (error)="setErrorImage($event)"
+                class="avatar  profile-user brround cover-image">
+        </span>
+    </a>
+    <div ngbDropdownMenu class="dropdown-menu-end dropdown-menu-arrow">
+        <div class="drop-heading">
+            <div class="text-center">
+                <h5 class="text-dark mb-0">{{profile.displayName}}</h5>
+                <small class="text-muted">{{profile.mail}}</small>
+               <h6> <small class="text-muted">Roles : {{profile.roles?.[0]}}</small></h6>
+            </div>
+        </div>
+        <div class="dropdown-divider m-0"></div>
+        <!-- <a class="dropdown-item" >
+            <i class="dropdown-icon fe fe-user"></i> Profile
+        </a>
+      
+        <a class="dropdown-item">
+            <i class="dropdown-icon fe fe-alert-circle"></i> Sign out
+        </a> -->
+    </div>
+</div>

@@ -1,0 +1,129 @@
+<app-header-breadcrumb [title]="'DIRECTSALES'" [showAddNew]="false"
+  [items]="['Direct Sales /O- CO – Lock & Current Month']" [showExport]="false"></app-header-breadcrumb>
+
+<div class="card" E [(ngbCollapse)]="isClosed8">
+  <div class="card-header ">
+    <h3 class="card-title "> O- CO – Lock & Current Month</h3>
+    <div class="card-options">
+      <a href="javascript:;" class="card-options-collapse" [attr.aria-expanded]="!isCollapsed8">
+        <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+      </a>
+    </div>
+  </div>
+  <div class="card-body p-2" [(ngbCollapse)]="isCollapsed8">
+
+    <form [formGroup]="lockmonthForm">
+      <div class="row">
+        
+        <div class="col-sm-6 col-md-4">
+          <div class="form-group">
+            <label class="form-label mt-0">Customer Type</label>
+            <ng-select [items]="getCustomerType" bindLabel="name" class="select2 custom-select"
+              (change)="loadCustomer(f.customerType?.value)" bindValue="id"
+              formControlName="customerType" placeholder="customer Type "></ng-select>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="form-group">
+            <label class="form-label mt-0">Customer</label>
+              <angular2-multiselect [settings]="customerMultiSelectSettings" formControlName="customer"
+              [data]="customerList">
+              </angular2-multiselect>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="form-group">
+            <label class="form-label mt-0">Product Sub-Category</label>
+            <angular2-multiselect 
+            [settings]="productCategoryId1MultiSelectSettings" 
+            formControlName="productcategory"
+            [data]="productList" 
+            (ngModelChange)="onMg1Select($event)">
+            </angular2-multiselect>
+
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        
+        <div class="col-sm-6 col-md-4">
+          <div class="form-group">
+            <label class="form-label mt-0">Product Type</label>
+            <angular2-multiselect [settings]="productCategoryId2MultiSelectSettings" formControlName="productsubcategory"
+            [data]="getMG2">
+            </angular2-multiselect>
+
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-8  mt-5 text-end">
+          <label class="form-label"></label>
+          <button type="button" class="btn btn-default-light" (click)="clearnScreen()">
+            <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>&nbsp;
+          <button [disabled]="loading" type="button" class="btn btn-indigo" (click)="searchLockMonth()"
+            [style.pointer-events]="loading?'none':''">
+            <i class="fe fe-search" *ngIf="!loading"> </i>
+            <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+            &nbsp; {{loading? 'Searching' : ' Search'}} &nbsp;
+          </button>
+        </div>
+      </div>
+      <div class="row">
+
+
+      </div>
+
+    </form>
+  </div>
+  <ng-container *ngIf="visible">
+    <hr>
+    <dx-data-grid [dataSource]="ocoLockMonthGrid" keyExpr="customerCode" [(selectedRowKeys)]="selectedRows"
+      columnResizingMode="widget" [allowColumnResizing]="true" [remoteOperations]="true" [showBorders]="true">
+      <dxo-column-chooser #columnChooser [enabled]="true" mode="select">
+      </dxo-column-chooser>
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-paging [pageSize]="20"></dxo-paging>
+      <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+      <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+      <dxo-selection mode="multiple" [showCheckBoxesMode]="'always'"> </dxo-selection>
+      <dxi-column dataField="customerCode" caption="Customer Code"></dxi-column>
+      <dxi-column dataField="customerName" caption="Customer Name"></dxi-column>
+      <dxi-column dataField="mg" caption="MG1"></dxi-column>
+      <dxi-column dataField="mg1" caption="MG2"></dxi-column>
+      <dxi-column dataField="materialCode" caption="Material code"></dxi-column>
+      <dxi-column dataField="monthYear" caption="Month"></dxi-column>
+      <dxi-column dataField="currentMonthQty" caption="Current Month Order">
+        <dxo-format format="#,##0.00"></dxo-format>
+      </dxi-column>
+      <dxi-column dataField="confirmedQty" caption="Confirmed (Last month order)">
+        <dxo-format format="#,##0.00"></dxo-format>
+      </dxi-column>
+      <dxi-column dataField="differences" caption="Difference">
+        <dxo-format format="#,##0.00"></dxo-format>
+      </dxi-column>
+      <dxo-export [enabled]="true" fileName="{{Oco_Lock_MonthFileName}}"></dxo-export>
+      <dxo-summary>
+        <dxi-total-item column="currentMonthQty" [valueFormat]="'#,##0'" summaryType="sum" displayFormat=" {0}">
+        </dxi-total-item>
+        <dxi-total-item column="confirmedQty" [valueFormat]="'#,##0'" summaryType="sum" displayFormat=" {0}">
+        </dxi-total-item>
+        <dxi-total-item column="differences" [valueFormat]="'#,##0'" summaryType="sum" displayFormat=" {0}">
+        </dxi-total-item>
+      </dxo-summary>
+      <dxo-toolbar>
+        <dxi-item location="after">
+          <div *dxTemplate>
+            <button type="button" class="btn btn-icon btn-outline-default" (click)="Updateocolockmonth()"
+              ngbTooltip="Update Record">
+              <i class="fe fe-check "></i></button>
+          </div>
+        </dxi-item>
+
+        <dxi-item name="exportButton"></dxi-item>
+
+        <dxi-item name="columnChooserButton"></dxi-item>
+        <dxi-item name="searchPanel"></dxi-item>
+      </dxo-toolbar>
+    </dx-data-grid>
+  </ng-container>
+</div>

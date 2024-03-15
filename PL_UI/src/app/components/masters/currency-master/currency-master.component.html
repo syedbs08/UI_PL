@@ -1,0 +1,85 @@
+<app-header-breadcrumb [title]="'CURRENCY MASTER'" [items]="['Masters']" [showExport]="false" (onExportClickEvent)="onExportClick($event)"
+    addButtonTitle="Excel Upload" (openPopUp)="onAddNewClick($event)" [showOtherButton]="true" [loading]="excelLoading"
+    otherIcon="ion-arrow-down-a" (onOtherButtonclick)="downloadTemplate($event)" OtherButtonTitle="Download Template"
+    icon="fa fa-file-excel-o" [active_item]="'CURRENCY'"></app-header-breadcrumb>
+<ng-template #currencyEntryModal let-modal>
+
+    <div class="modal-header">
+        <h5 class="modal-title text-primary fw-semibold"> <span>
+            </span>UPLOAD CURRENCY </h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-6 col-md-12">
+                <ngx-dropzone (change)="onSelect($event)" [multiple]="false"
+                    accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                    <ngx-dropzone-label>Select from my computer <span class="text-red">*</span></ngx-dropzone-label>
+                    <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                        <ngx-dropzone-label>{{ f.name }} </ngx-dropzone-label>
+                    </ngx-dropzone-preview>
+                </ngx-dropzone>
+                <div *ngIf="rejectedFile.length>0" class="text-danger">
+                    Please select a valid file
+
+                </div>
+
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-6 col-md-12">
+
+            </div>
+        </div>
+        <div class="row" *ngIf="error.length>0">
+            <div class="col-sm-6 col-md-12 text-danger" [innerHTML]="error" style="overflow-y: auto;height: 100px;">
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+
+
+        <button [disabled]="loading" class="btn btn-indigo" type="button" [style.pointer-events]="loading?'none':''"
+            (click)="onSubmit()">
+            <i class="fe fe-check" *ngIf="!loading"> </i>
+            <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+            &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+        </button>
+        <!-- <button type="button" class="btn btn-indigo">Save changes</button> -->
+    </div>
+
+</ng-template>
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="card " [(ngbCollapse)]="isClosed8">
+            <div class="card-header ">
+                <h3 class="card-title ">Currency List</h3>
+                <div class="card-options">
+                    <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                        [attr.aria-expanded]="!isCollapsed8">
+                        <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body " [(ngbCollapse)]="isCollapsed8">
+                <dx-data-grid  id="grid" [dataSource]="currencyList" columnResizingMode="widget"  [allowColumnResizing]="true" [showBorders]="true">
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-header-filter [visible]="true" alignment="right"></dxo-header-filter>
+                    <dxo-paging [pageSize]="20"></dxo-paging>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                    <dxi-column   dataField="currencyName" caption="Currency Name">
+                    </dxi-column>
+                    <dxi-column dataField="currencyCode" caption="Currency Code"></dxi-column>
+                    <dxi-column  dataField="exchangeRate" caption="Exchange Rate"></dxi-column>
+                    <dxo-export [enabled]="true" fileName="Currency"></dxo-export>
+                </dx-data-grid>
+            </div>
+
+        </div>
+    </div><!-- COL END -->
+
+</div>

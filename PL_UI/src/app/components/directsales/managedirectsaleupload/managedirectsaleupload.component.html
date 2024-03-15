@@ -1,0 +1,32 @@
+<app-header-breadcrumb [title]="'Direct Sales'" [items]="['DirectSales']" [active_item]="'Manage Agent Excel'"
+    [showAddNew]="false">
+</app-header-breadcrumb>
+
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="card pt-2">
+
+            <div class="card-body pt-0">
+                <mat-tab-group>
+                    <mat-tab label="Agent Excel Upload">
+                        <ng-template matTabContent>
+                            <div class="mt-2">
+                             <app-direct-sales-upload [showheader]="false"></app-direct-sales-upload>
+                            </div>
+                        </ng-template>
+                    </mat-tab>
+                    <mat-tab label="Agent Excel Download">
+                        <ng-template matTabContent>
+                            <div class="mt-2">
+                                <app-agent-summary-download [showheader]="false"></app-agent-summary-download>
+                            </div>
+                        </ng-template>
+                    </mat-tab>
+
+                </mat-tab-group>
+            </div>
+        </div>
+
+
+    </div>
+</div>

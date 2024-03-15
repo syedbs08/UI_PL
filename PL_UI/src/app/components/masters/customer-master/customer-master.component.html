@@ -1,0 +1,307 @@
+<app-header-breadcrumb [title]="'CUSTOMER MASTER'" [items]="['Masters']" [showExport]="showExportButton"
+    (onExportClickEvent)="onExportClick($event)" [loading]="excelLoading" (openPopUp)="onAddNewClick($event)"
+    [active_item]="'Customer'" [showAddNew]="showAddNewButton" [showOtherButton]="showOtherButton"
+    otherIcon="fa fa-step-backward" (onOtherButtonclick)="backButton()"
+    OtherButtonTitle="Go Back"></app-header-breadcrumb>
+
+<form [formGroup]="customerForm">
+    <div class="card" *ngIf="showEntryScreen">
+
+        <div class="card-header">
+            <h3 class="card-title">Customer</h3>
+        </div>
+        <div class="card-body" id="entryForm">
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Customer Code<span class="text-red">*</span></label>
+                        <input type="text" maxlength="10" (keypress)="validateNumberString($event)" class="form-control"
+                            placeholder="customer code" formControlName="CustomerCode" [readOnly]="isDisable">
+                        <div *ngIf="submitted && f.CustomerCode.errors" class="text-danger">
+                            <div *ngIf="f.CustomerCode.errors.required">Please enter customer code
+                            </div>
+                            <div *ngIf="f.CustomerCode.errors.maxLength">Customer code can't more than 10 character
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Customer Name<span class="text-red">*</span></label>
+                        <input type="text" class="form-control" maxlength="100" placeholder="customer name"
+                            formControlName="CustomerName">
+                        <div *ngIf="submitted && f.CustomerName.errors" class="text-danger">
+                            <div *ngIf="f.CustomerName.errors.required">Please enter customer name
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Short Name <span class="text-red">*</span></label>
+                        <input type="text" class="form-control" maxlength="200" placeholder="short Name"
+                            formControlName="CustomerShortName">
+                        <div *ngIf="submitted && f.CustomerShortName.errors" class="text-danger">
+                            <div *ngIf="f.CustomerShortName.errors.required">Please enter short description
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Email<span class="text-red">*</span></label>
+                        <input type="email" class="form-control" maxlength="100" placeholder="email"
+                            formControlName="EmailId">
+                        <div *ngIf="submitted && f.EmailId.errors" class="text-danger">
+                            <div *ngIf="f.EmailId.errors.required">Please enter email
+                            </div>
+                            <div *ngIf="f.EmailId.errors.email">Please enter valid email</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Region</label>
+                        <ng-select [items]="getRegion" bindLabel="regionName" class="select2 custom-select"
+                            bindValue="regionId" formControlName="RegionId" placeholder="region">
+                        </ng-select>
+
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Department<span class="text-red">*</span></label>
+                        <ng-select [items]="getDepartment" bindLabel="departmentName" class="select2 custom-select"
+                            bindValue="departmentId" (change)="onDepartmentSelect(f.DepartmentId?.value)"
+                            formControlName="DepartmentId" placeholder="department">
+                        </ng-select>
+                        <div *ngIf="submitted && f.DepartmentId.errors" class="text-danger">
+                            <div *ngIf="f.DepartmentId.errors.required">Please select department
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Country<span class="text-red">*</span></label>
+                        <ng-select [items]="getCountry" bindLabel="countryName" class=" select2 custom-select"
+                            bindValue="countryId" formControlName="CountryId" placeholder="country"
+                            (change)="onCountrySelect(f.CountryId?.value,f.SalesTypeIds?.value)">
+                        </ng-select>
+                        <div *ngIf="submitted && f.CountryId.errors" class="text-danger">
+                            <div *ngIf="f.CountryId.errors.required">Please select country
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Sales Office</label>
+                        <ng-select [items]="getSalesOffice" bindLabel="salesOfficeName" class=" select2 custom-select"
+                            bindValue="salesOfficeId" formControlName="SalesOfficeId" placeholder="sales office">
+                        </ng-select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Person In Charge</label>
+                        <ng-select [items]="getPersonInCharge" bindLabel="userName" class="select2 custom-select"
+                            bindValue="userId" formControlName="PersonInChargeId" placeholder="person in charge">
+                        </ng-select>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="form-label">Sales Type<span class="text-red">*</span></label>
+                            <ng-select [items]="getSaleType" bindLabel="saleTypeName" class="select2 custom-select"
+                                bindValue="saleTypeId" (change)="onSaleTypeSelect(f.SalesTypeIds?.value)"
+                                formControlName="SalesTypeIds" placeholder="type" [multiple]="true">
+                            </ng-select>
+                            <div *ngIf="submitted && f.SalesTypeIds.errors" class="text-danger">
+                                <div *ngIf="f.SalesTypeIds.errors.required">Please enter sales type
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="form-label">Account</label>
+                            <ng-select [items]="getAccount" bindLabel="displayName" class="select2 custom-select"
+                                bindValue="accountId" formControlName="AccountId" placeholder="account">
+                            </ng-select>
+                            <div *ngIf="submitted && f.AccountId.errors" class="text-danger">
+                                <div *ngIf="f.AccountId.errors.required">Please enter account
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="form-label">Sales Organization</label>
+                            <ng-select [items]="getSalesOrganization" bindLabel="salesOrganizationName"
+                                class="select2 custom-select" bindValue="salesOrganizationCode"
+                                formControlName="SalesOrganizationCode" placeholder="code">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Currency<span class="text-red">*</span></label>
+                        <ng-select [items]="getCurrency" bindLabel="currencyCode" class="select2 custom-select"
+                            bindValue="currencyCode" formControlName="CurrencyCode" placeholder="currency">
+                        </ng-select>
+                        <div *ngIf="submitted && f.CurrencyCode.errors" class="text-danger">
+                            <div *ngIf="f.CurrencyCode.errors.required">Please select Currency
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8 col-md-5 mt-5">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-3">
+                            <div class="form-group">
+                                <label class="form-label col-md-12"></label>
+                                <label class="custom-control custom-checkbox">
+                                    <input type="checkbox" id="Active" class="custom-control-input"
+                                        formControlName="IsActive">
+                                    <span class="custom-control-label">Active</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="form-group">
+                                <label class="form-label col-md-12"></label>
+                                <label class="custom-control custom-checkbox">
+                                    <input type="checkbox" id="Active" class="custom-control-input"
+                                        formControlName="IsPSI">
+                                    <span class="custom-control-label">PSI</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="form-group">
+                                <label class="form-label col-md-12"></label>
+                                <label class="custom-control custom-checkbox">
+                                    <input type="checkbox" id="Active" class="custom-control-input"
+                                        formControlName="IsBP">
+                                    <span class="custom-control-label">BP</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="form-group">
+                                <label class="form-label col-md-12"></label>
+                                <label class="custom-control custom-checkbox">
+                                    <input type="checkbox" id="Active" class="custom-control-input"
+                                        formControlName="IsCollabo">
+                                    <span class="custom-control-label">Collabo</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+
+            <button type="button" class="btn btn-default-light" (click)="reload()">
+                <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+            <button [disabled]="loading" class="btn btn-indigo" type="button" (click)="onSubmit()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+            </button>
+        </div>
+    </div>
+</form>
+
+
+
+<div class="row" *ngIf=" !showEntryScreen">
+    <div class="col-md-12 col-lg-12">
+        <div class="card " [(ngbCollapse)]="isClosed8">
+            <div class="card-header ">
+                <h3 class="card-title ">Customer List</h3>
+                <div class="card-options">
+                    <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                        [attr.aria-expanded]="!isCollapsed8">
+                        <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+                    </a>
+
+                </div>
+            </div>
+            <div class="card-body " [(ngbCollapse)]="isCollapsed8">
+                <dx-data-grid [allowColumnResizing]="true" id="grid" [dataSource]="customerList"
+                    columnResizingMode="widget" [showBorders]="true">
+                    <dxo-column-chooser #columnChooser [enabled]="true" mode="select">
+                    </dxo-column-chooser>
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-header-filter [visible]="true" alignment="right"></dxo-header-filter>
+                    <dxo-paging [pageSize]="20"></dxo-paging>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                    <dxi-column dataField="customerCode" caption="Customer Code">
+                    </dxi-column>
+                    <dxi-column dataField="customerName" caption="Customer Name"></dxi-column>
+                    <dxi-column dataField="customerShortName" caption="Short Name"></dxi-column>
+                    <dxi-column dataField="regionName" caption="Region"></dxi-column>
+                    <dxi-column dataField="departmentName" caption="Department"></dxi-column>
+                    <dxi-column dataField="countryName" caption="Country"></dxi-column>
+                    <dxi-column dataField="salesOfficeName" caption="Sales office"></dxi-column>
+                    <dxi-column dataField="personInChargeName" caption="PIC"></dxi-column>
+                    <dxi-column [visible]="false" [showEditorAlways]='false' [customizeText]='customizeText'
+                        dataField="isPSI" caption="PSI"></dxi-column>
+                    <dxi-column [visible]="false" [showEditorAlways]='false' [customizeText]='customizeText'
+                        dataField="isBP" caption="BP"></dxi-column>
+                    <dxi-column [showEditorAlways]='false' [customizeText]='customizeText'
+                        [filterOperations]="['contains']" dataField="isActive" caption="IsActive"></dxi-column>
+                    <dxi-column [visible]="false" [showEditorAlways]='false' [customizeText]='customizeText'
+                        [filterOperations]="['contains']" dataField="isCollabo" caption="IsCollabo"></dxi-column>
+                    <dxi-column [visible]="false" dataField="createdBy" caption="CreatedBy"></dxi-column>
+                    <dxi-column [visible]="false" dataType="date" dataField="createdDate"
+                        caption="CreatedDate"></dxi-column>
+                    <dxi-column [visible]="false" dataField="updateBy" caption="UpdateBy"></dxi-column>
+                    <dxi-column [visible]="false" dataType="date" dataField="updateDate"
+                        caption="UpdateDate"></dxi-column>
+                        <dxi-column [visible]="false" dataType="date" dataField="currencyCode"
+                        caption="Currency"></dxi-column>
+                    <dxi-column dataField="salesTypeNames" caption="Type"></dxi-column>
+                    <dxi-column [showInColumnChooser]="false" [allowFiltering]="false" [allowSorting]="false"
+                        cellTemplate="buttonDeleteCellTemplate">
+                    </dxi-column>
+                    <div *dxTemplate="let data of 'buttonDeleteCellTemplate'" width="100">
+                        <button class="btn  btn-outline-info  iconbox  me-2 iconbox-xxs" ngbTooltip="View & Update"
+                            (click)="onCustomerSelect(data.data)">
+                            <i class="mdi mdi-pencil"></i>
+                        </button>
+                    </div>
+                    <dxo-export [enabled]="true" fileName="Customer"></dxo-export>
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+
+</div>

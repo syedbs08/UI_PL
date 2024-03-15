@@ -1,0 +1,48 @@
+<app-header-breadcrumb [title]="'DASH MASTER BP'" [items]="['Masters']" [showExport]="false" [showAddNew]="false"
+    [active_item]="'Dash Master BP'"></app-header-breadcrumb>
+    <div class="row" >
+        <div class="col-md-12 col-lg-12">
+            <div class="card " [(ngbCollapse)]="isClosed8">
+                <div class="card-header ">
+                    <h3 class="card-title ">Dash Master BP List</h3>
+                    <div class="card-options">
+                        <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                            [attr.aria-expanded]="!isCollapsed8">
+                            <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+                        </a>
+    
+                    </div>
+                </div>
+                <div class="card-body " [(ngbCollapse)]="isCollapsed8">
+                    <dx-data-grid id="grid" [dataSource]="dashMasterBpList" [allowColumnResizing]="true"
+                        [remoteOperations]="true" [showBorders]="true" [rowAlternationEnabled]="true">
+                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                        <dxo-header-filter [visible]="true" alignment="right"></dxo-header-filter>
+                        <dxo-paging [pageSize]="20"></dxo-paging>
+                        <dxo-group-panel [visible]="false"></dxo-group-panel>
+                        <dxo-grouping #expand [autoExpandAll]="true"></dxo-grouping>
+                        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                        <dxi-column dataField="modelNo" caption="Model Code">
+                        </dxi-column>
+                        <dxi-column dataField="customerCode" caption="Receiver"></dxi-column>
+                        <dxi-column dataField="companyCode" caption="Company Code"></dxi-column>
+                        <dxi-column dataField="customerCode" caption="Customer Code"></dxi-column>
+                        <dxi-column dataField="customerName" caption="Customer Name"></dxi-column>
+                        <dxi-column dataField="modelType" caption="Reason Code"></dxi-column>
+                        <dxi-column dataField="reasonName" caption="Reason"></dxi-column>
+                        <dxi-column dataField="financialYear" caption="FY"></dxi-column>  
+                        <dxi-column dataField="factoryCode" caption="Factory"></dxi-column>
+                        <dxi-column dataField="supplierCode" caption="Supplier Code"></dxi-column>
+                        <dxi-column dataField="supplierName" caption="Supplier Name"></dxi-column>
+                        <dxo-export [enabled]="true" [allowExportSelectedData]="false"
+                            [fileName]="dashMasterFileName"></dxo-export>
+                    </dx-data-grid>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>

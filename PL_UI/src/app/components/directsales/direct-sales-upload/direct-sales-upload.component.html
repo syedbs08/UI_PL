@@ -1,0 +1,201 @@
+<app-header-breadcrumb [title]="'Direct Sales'" [items]="['DirectSales']" [active_item]="'Agent Excel Upload'"
+    [showAddNew]="false" *ngIf="showheader">
+</app-header-breadcrumb>
+
+<form [formGroup]="uploadForm">
+    <div class="card">
+        <div class="card-header" *ngIf="showheader">
+            <h3 class="card-title">Agent Excel Upload</h3>
+        </div>
+        <div class="card-body" id="entryForm">
+            <div class="row">
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Customer Type<span class="text-red">*</span></label>
+                        <ng-select [items]="customerTypeList" bindLabel="description" class="select2 custom-select"
+                            bindValue="id" formControlName="customerType" placeholder="Customer Type"
+                            (change)="onCustomerTypeChange()">
+                        </ng-select>
+                        <div *ngIf="(form.customerType?.touched && form.customerType?.errors)" class="text-danger">
+                            <div *ngIf="form.customerType?.errors?.required">Please select Customer Type</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Customer<span class="text-red">*</span></label>
+                        <ng-select [items]="customerList" bindLabel="customerName" class="select2 custom-select"
+                            bindValue="customerId" formControlName="customerId" placeholder="Customer">
+                        </ng-select>
+                        <div *ngIf="(form.customerId?.touched && form.customerId?.errors)" class="text-danger">
+                            <div *ngIf="form.customerId?.errors?.required">Please select Customer</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-sm-6 col-md-2">
+                    <div class="form-group ">
+                        <div class="form-label">Product<span class="text-red">*</span></div>
+                        <div class="custom-controls-stacked">
+                            <label class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="Product" value="Sub Group"
+                                    checked formControlName="product">
+                                <span class="custom-control-label">Sub Group</span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="Product" value="Product Type"
+                                    formControlName="product">
+                                <span class="custom-control-label">Product Type</span>
+                            </label>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Sub Category<span class="text-red">*</span></label>
+                        <ng-select [items]="productCategoryList" bindLabel="displayName" class="select2 custom-select"
+                            bindValue="id"   (change)="getProductSubCategoryList()" formControlName="productCategoryId"
+                            placeholder="Sub Category">
+                        </ng-select>
+                        <div *ngIf="(form.productCategoryId?.touched && form.productCategoryId?.errors)"
+                            class="text-danger">
+                            <div *ngIf="form.productCategoryId?.errors?.required">Please select Sub Category</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Product Type</label>
+                        <ng-select [items]="productSubCategoryList" bindLabel="displayName"
+                            class="select2 custom-select" bindValue="id"   formControlName="productSubCategoryId"
+                            placeholder="Product Type">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group ">
+                        <div class="form-label">Sales Sub Type <span class="text-red">*</span></div>
+                        <div class="custom-controls-stacked">
+                            <label class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="SaleSubType" value="Monthly"
+                                    checked formControlName="saleSubType">
+                                <span class="custom-control-label">Monthly</span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" name="SaleSubType" value="BP"
+                                    formControlName="saleSubType">
+                                <span class="custom-control-label">BP</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">File<span class="text-red">*</span></label>
+                        <ngx-dropzone class="uploadFile" (change)="onSelect($event)" [multiple]="false"
+                            accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                            <ngx-dropzone-label>Select from my computer <span
+                                    class="text-red">*</span></ngx-dropzone-label>
+                            <ngx-dropzone-preview class="file" *ngFor="let f of files" [removable]="true"
+                                (removed)="onRemove(f)">
+                                <ngx-dropzone-label>{{ f.name }}</ngx-dropzone-label>
+                            </ngx-dropzone-preview>
+                        </ngx-dropzone>
+                        <div *ngIf="rejectedFile.length>0" class="text-danger">
+                            Please select a valid file
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default-light" (click)="clearForm()">
+                <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+            <button [disabled]="loading" class="btn btn-indigo" type="button" (click)="onSubmit()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Upload'}} &nbsp;
+            </button>
+        </div>
+        <div class="col-sm-6 col-md-12" *ngIf="showError">
+            <div class="card">
+                <div class="card-body">
+                    <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <span class="tab-header" [ngClass]="{'text-danger': missingItems.length}">Missing Items
+                                    ({{missingItems.length}})</span>
+                            </ng-template>
+                            <div>
+                                <ol>
+                                    <li class="error-message" *ngFor="let item of missingItems">{{item.responseMessage}}
+                                    </li>
+                                </ol>
+                            </div>
+
+                        </mat-tab>
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <span class="tab-header"
+                                    [ngClass]="{'text-danger': negativeInventoryItems.length}">Negative Inventory
+                                    ({{negativeInventoryItems.length}})</span>
+                            </ng-template>
+                            <div>
+                                <ol>
+                                    <li class="error-message" *ngFor="let item of negativeInventoryItems">
+                                        {{item.responseMessage}}</li>
+                                </ol>
+                            </div>
+                        </mat-tab>
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <span class="tab-header" [ngClass]="{'text-danger': duplicateItems.length}">Duplicate
+                                    Items ({{duplicateItems.length}})</span>
+                            </ng-template>
+                            <div>
+                                <ol>
+                                    <li class="error-message" *ngFor="let item of duplicateItems">
+                                        {{item.responseMessage}}</li>
+                                </ol>
+                            </div>
+                        </mat-tab>
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <span class="tab-header" [ngClass]="{'text-danger': otherErrors.length}">Other Errors
+                                    ({{otherErrors.length}})</span>
+                            </ng-template>
+                            <div>
+                                <ol>
+                                    <li class="error-message" *ngFor="let item of otherErrors">{{item.responseMessage}}
+                                    </li>
+                                </ol>
+                            </div>
+                        </mat-tab>
+
+                    </mat-tab-group>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-12" *ngIf="showReport">
+            <div class="card">
+                <div class="card-body">
+                    <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <span class="tab-header">Pivot Report</span>
+                            </ng-template>
+                            <div>
+                                <dx-pivot-grid id="sales" [allowSortingBySummary]="true" [allowSorting]="true"
+                        [allowFiltering]="true" [allowExpandAll]="true" [height]="440" [showBorders]="true"
+                        [dataSource]="dataSource">
+                        <dxo-field-chooser [enabled]="true"></dxo-field-chooser>
+                    </dx-pivot-grid>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

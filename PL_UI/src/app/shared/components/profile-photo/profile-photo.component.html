@@ -1,0 +1,11 @@
+<div class="d-flex" *ngIf="smallSize">
+    <img [src]="userPhoto" class="avatar avatar-md brround mt-1" (error)="setErrorImage($event)">
+    <div class="ms-2 mt-0 mt-sm-2 d-block">
+        <h6 class="mb-0 fs-14 fw-semibold">
+            {{DisplayName}}</h6>
+        <span class="fs-12 text-muted">{{ UserPrincipalName }}</span>
+    </div>
+</div>
+
+
+<img [src]="userPhoto" class="avatar avatar-xxxxl" *ngIf="!smallSize" (error)="setErrorImage($event)">

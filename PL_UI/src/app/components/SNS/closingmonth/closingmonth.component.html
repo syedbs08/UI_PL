@@ -1,0 +1,125 @@
+<app-header-breadcrumb [title]="'CLOSING MONTH'" [items]="['CLOSING']" [showAddNew]="false"
+    [active_item]="'SNS'"></app-header-breadcrumb>
+<div class="card">
+    <div class="card-header ">
+        <h3 class="card-title ">Closing Month</h3>
+        <div class="card-options">
+
+        </div>
+    </div>
+    <div class="card-body p-2">
+
+        <div class="row">
+            <div class="col-md-4 text-primary font-size-14">
+                <div class="form-group">
+                    <label>Result Month</label>
+                    <input type="text" [(ngModel)]="globalConfig.resultMonth" class="form-control" readonly>
+                </div>
+            </div>
+            <div class="col-md-4 text-primary font-size-14">
+                <div class="form-group">
+                    <label>Current Month</label>
+                    <input type="text" [(ngModel)]="globalConfig.currentMonth" class="form-control" readonly>
+                </div>
+            </div>
+            <div class="col-md-4 text-primary font-size-14">
+                <div class="form-group">
+                    <label>Lock Month</label>
+                    <input type="text" [(ngModel)]="globalConfig.lockMonth" class="form-control" readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+          
+            <div class="col-md-12 text-end">
+
+                <button class="btn btn-secondary me-3" type="button" (click)="onMonthChange()"
+                    [style.pointer-events]="loading?'none':''">
+                    <i class="fe fe-repeat" *ngIf="!loading"> </i>
+                    <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                    &nbsp; {{loading? 'Submitting' : ' Change Month'}} &nbsp;
+                </button>
+                <button class="btn btn-indigo ml-2" type="button" (click)="onMonthClosingTrigger()"
+                    [style.pointer-events]="loading?'none':''">
+                    <i class="fe fe-repeat" *ngIf="!loading"> </i>
+                    <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                    &nbsp; {{loading? 'Submitting' : ' Start Closing '}} &nbsp;
+                </button>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <table class="table table-border">
+                    <thead>
+
+                        <th>
+                            Types
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Affected Record
+                        </th>
+
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of closingTypes">
+                            <td>{{item.name}}</td>
+                            <td>
+                                <i class="fa fa-spinner fa-spin" *ngIf="item.triggered=='In Progress'"> </i>
+                                <i class="fa fa-check " *ngIf="item.triggered=='Completed'"> </i>
+                                <span> {{item.triggered}}</span>
+
+
+                            </td>
+                            <td>
+                                <span [ngClass]="item.triggered==='Completed' ?'text-primary':''"
+                                    *ngIf="item.type!=='RESULTPURCHASE'">
+                                    Sap Record : {{item.response.sapCount}}
+                                </span>
+                                <span [ngClass]="item.triggered==='Completed' ?'text-primary':''">
+                                    Inserted Record : {{item.response.insertedCount}}
+
+
+                                </span>
+                                <button class="btn btn-info btn-sm float-lg-end"
+                                    ngbTooltip="Click here to update result purchase after data fetched from SAP"
+                                    *ngIf="item.type==='RESULTPURCHASE' && showUpdatePurchase===true"
+                                    (click)="onResultMonthClick(item)">Update Purchase</button>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer" *ngIf="showUpdateConsignee">
+        <div class="row">
+
+
+            <div class="col-md-8">
+                <div class="custom-controls-stacked float-lg-end">
+                    <label class="custom-control custom-radio" *ngFor="let account of accounts">
+                        <input type="radio" class="custom-control-input" name="accounts" [value]="account.accountCode"
+                            [(ngModel)]="selectedAccount">
+                        <span class="custom-control-label">{{account.accountName}}</span>
+                    </label>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-indigo float-end" type="button" (click)="onUpdateConsignee()"
+                    [style.pointer-events]="loading?'none':''">
+                    <i class="fe fe-repeat" *ngIf="!loading"> </i>
+                    <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                    &nbsp; {{loading? 'please wait' : ' Update Consignee '}} &nbsp;
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

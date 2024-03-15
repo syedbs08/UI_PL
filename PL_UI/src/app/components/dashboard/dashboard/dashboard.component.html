@@ -1,0 +1,173 @@
+<app-header-breadcrumb [title]="'Dashboard'" [items]="['Home']" [showAddNew]="false"
+    [active_item]="'Dashboard'"></app-header-breadcrumb>
+
+
+<div _ngcontent-gxg-c284="" class="container">
+    <div _ngcontent-gxg-c284="" class="row text-center mx-auto">
+        <div _ngcontent-gxg-c284="" class="col-lg-8 col-sm-12 center-block align-items-center construction">
+            <div _ngcontent-gxg-c284="" class="text-default">
+                <div _ngcontent-gxg-c284="" class="card-body">
+                    <h1 _ngcontent-gxg-c284="" class="display-3 mb-0 fw-semibold">WELCOME TO FORECAST PL</h1>
+                    <div _ngcontent-gxg-c284="" id="launch_date"></div>
+                    <p _ngcontent-gxg-c284="">Kindly contact to IT Support if any support needed  </p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ROW-1 -->
+<!-- <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
+                <div class="card overflow-hidden">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="">Total Sales</h6>
+                                <h3 class="mb-2 number-font">34,516</h3>
+                                <p class="text-muted mb-0">
+                                    <span class="text-primary"><i class="fa fa-chevron-circle-up text-primary me-1"></i>
+                                        3%</span> last month
+                                </p>
+                            </div>
+                            <div class="col col-auto">
+                                <div class="counter-icon bg-primary-gradient box-shadow-primary brround ms-auto">
+                                    <i class="fe fe-trending-up text-white mb-5 "></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
+                <div class="card overflow-hidden">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="">Total Leads</h6>
+                                <h3 class="mb-2 number-font">56,992</h3>
+                                <p class="text-muted mb-0">
+                                    <span class="text-secondary"><i
+                                            class="fa fa-chevron-circle-up text-secondary me-1"></i> 3%</span> last
+                                    month
+                                </p>
+                            </div>
+                            <div class="col col-auto">
+                                <div class="counter-icon bg-danger-gradient box-shadow-danger brround  ms-auto">
+                                    <i class="icon icon-rocket text-white mb-5 "></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
+                <div class="card overflow-hidden">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="">Total Profit</h6>
+                                <h3 class="mb-2 number-font">$42,567</h3>
+                                <p class="text-muted mb-0">
+                                    <span class="text-success"><i
+                                            class="fa fa-chevron-circle-down text-success me-1"></i> 0.5%</span> last
+                                    month
+                                </p>
+                            </div>
+                            <div class="col col-auto">
+                                <div class="counter-icon bg-secondary-gradient box-shadow-secondary brround ms-auto">
+                                    <i class="fe fe-dollar-sign text-white mb-5 "></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12 col-xl-3">
+                <div class="card overflow-hidden">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="">Total Cost</h6>
+                                <h3 class="mb-2 number-font">$34,789</h3>
+                                <p class="text-muted mb-0">
+                                    <span class="text-danger"><i class="fa fa-chevron-circle-down text-danger me-1"></i>
+                                        0.2%</span> last month
+                                </p>
+                            </div>
+                            <div class="col col-auto">
+                                <div class="counter-icon bg-success-gradient box-shadow-success brround  ms-auto">
+                                    <i class="fe fe-briefcase text-white mb-5 "></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<!-- <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-9">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Total Transactions</h3>
+            </div>
+            <div class="card-body pb-0">
+                <canvas baseChart class="h-300"
+                [data]="lineChartData" 
+                [options]="lineChartOptions" 
+                [legend]="lineChartLegend"
+                [type]="lineChartType">
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-header">
+                <h3 class="card-title">Recent Orders</h3>
+            </div>
+            <div class="card-body pt-0">
+                <div id="recentorders" class="apex-charts ht-180">
+                    <apx-chart [series]="orderData.series" [chart]="orderData.chart"
+                    [plotOptions]="orderData.plotOptions" [fill]="orderData.fill" [stroke]="orderData.stroke"
+                    [labels]="orderData.labels">
+                    </apx-chart>
+                </div>
+
+                <div class="row sales-product-infomation pb-0 mb-0 mx-auto wd-100p mt-6">
+                    <div class="col-md-6 col justify-content-center text-center">
+                        <p class="mb-0 d-flex justify-content-center"><span class="legend bg-primary"></span>Delivered
+                        </p>
+                        <h3 class="mb-1 fw-bold">5238</h3>
+                        <div class="d-flex justify-content-center ">
+                            <p class="text-muted mb-0">Last 6 months</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col text-center float-end">
+                        <p class="mb-0 d-flex justify-content-center "><span
+                                class="legend bg-background2"></span>Cancelled</p>
+                        <h3 class="mb-1 fw-bold">3467</h3>
+                        <div class="d-flex justify-content-center ">
+                            <p class="text-muted mb-0">Last 6 months</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</div> -->
+<!-- ROW-1 END -->
+
+<!-- ROW-3 -->
+
+<!-- COL END -->
+<!-- ROW-3 END -->
+
+<!-- ROW-5 -->

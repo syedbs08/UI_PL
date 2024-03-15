@@ -1,0 +1,142 @@
+<app-header-breadcrumb [title]="'PRODUCT CATEGORY MASTER'" [items]="['Masters']" [showExport]="false"
+(openPopUp)="onAddNewClick($event)"    [active_item]="'PRODUCT CATEGORY'"></app-header-breadcrumb>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Product Category</h3>
+        </div>
+        <div class="card-body ">
+            <div class="row" >
+                <div class="col-sm-4 col-md-4 card" id="showTreeDiv" *ngIf="showTree">
+            <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                    <button mat-icon-button disabled></button>
+                <button (click)="editCategoryClick(node)">{{node.name}}</button></mat-tree-node>
+                <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding><button mat-icon-button matTreeNodeToggle
+                        [attr.aria-label]="'Toggle ' + node.name"><mat-icon class="mat-icon-rtl-mirror">
+                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}</mat-icon></button>
+                    <button (click)="editCategoryClick(node)">{{node.name}}</button></mat-tree-node></mat-tree>
+            </div>
+            <div class="col-sm-4 col-md-8">
+                <div *ngIf="showEditCategory" id="divEditCategory" class="card" >
+                    <form [formGroup]="editProductCategoryForm">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                    <button type="button" id="btnCreateSubCategory" class="btn btn-primary f-right"  (click)="addSubCategoryClick();">Add Sub Category</button>
+                            </div>
+                            <div class="col">
+                                <h6><label id="lblCategoryTitle"> Edit Category </label>  </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-block">
+                       
+                            <div class="col-md-12">
+                                
+                                    <div class="form-group">
+                                        <label class="control-label">Category Name</label>
+                                        <input type="text" class="form-control" maxlength="100" placeholder="category name"
+                                        formControlName="ProductCategoryName">
+                                        <div *ngIf="submitted && editFrom.ProductCategoryName.errors" class="text-danger">
+                                            <div *ngIf="editFrom.ProductCategoryName.errors.required">Please enter category name
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Category Code</label>
+                                        <input type="text" class="form-control" maxlength="100" placeholder="category code"
+                                        formControlName="ProductCategoryCode">
+                                        <div *ngIf="submitted && editFrom.ProductCategoryCode.errors" class="text-danger">
+                                            <div *ngIf="editFrom.ProductCategoryCode.errors.required">Please enter category code
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label"></label>
+                                        <div class="">
+                                            <div class="checkbox-fade fade-in-primary">
+                                                <label>
+                                                    <input type="checkbox" id="IsActive" formControlName="IsActive">
+                                                    <span class="cr">
+                                                        <i class=" txt-primary"></i>
+                                                    </span>
+                                                    <span>Active</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button [disabled]="loading" class="btn btn-indigo" type="button" (click)="onUpdateSubmit()"
+                                        [style.pointer-events]="loading?'none':''">
+                                        <i class="fe fe-check" *ngIf="!loading"> </i>
+                                        <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                                        &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+                                    </button>
+                                    <button type="button" class="btn btn-default-light" (click)="onCancelClick()">
+                                        <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+                                    </div>
+                            </div>
+                    </div>
+                </form>
+                </div>
+         <div *ngIf="showAddCategory" id="divNewCategory" class="card" >
+            <form [formGroup]="addProductCategoryForm">
+                    <div class="card-header">
+
+                        <div class="row">
+                            <div class="col">
+                                <h6><label id="lblCategoryTitle">Add Category </label>  </h6>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-block">
+                       
+                            <div class="col-md-12">
+                               
+                                    <div class="form-group">
+                                        <label class="control-label">Parent Category Name:</label>
+                                        <input type="text" class="form-control" placeholder="name"
+                                        formControlName="ParentCategoryName" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Category Name</label>
+                                        <input type="text" class="form-control" maxlength="100" placeholder="category name"
+                                        formControlName="ProductCategoryName">
+                                        <div *ngIf="submitted && addFrom.ProductCategoryName.errors" class="text-danger">
+                                            <div *ngIf="addFrom.ProductCategoryName.errors.required">Please enter category name
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Category Code</label>
+                                        <input type="text" class="form-control" maxlength="100" placeholder="category code"
+                                        formControlName="ProductCategoryCode">
+                                        <div *ngIf="submitted && addFrom.ProductCategoryCode.errors" class="text-danger">
+                                            <div *ngIf="addFrom.ProductCategoryCode.errors.required">Please enter category code
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <button [disabled]="loading" class="btn btn-indigo" type="button" (click)="onAddSubmit()"
+                                            [style.pointer-events]="loading?'none':''">
+                                            <i class="fe fe-check" *ngIf="!loading"> </i>
+                                            <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                                            &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+                                        </button>
+                                        <button type="button" class="btn btn-default-light" (click)="onCancelClick()">
+                                            <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+                                        </div>
+                                    </div>
+                                
+                            </div>
+                    </div>
+                    </form>
+                </div> 
+            </div>
+        </div>
+    </div>
+        </div>
+      
+

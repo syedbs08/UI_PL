@@ -1,0 +1,15 @@
+::ng-deep{
+    .dark-mode .apex-charts text {
+        fill: #fff !important;
+    }
+    .ht-180{
+        max-height: 180px;
+    }
+    .center {
+        margin: auto;
+        width: 50%;
+        // border: 3px solid green;
+        padding: 200px;
+        text-align: center;
+      }
+}

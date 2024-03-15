@@ -1,0 +1,97 @@
+<app-header-breadcrumb [title]="'DASH MASTER'" [items]="['Masters']" [showExport]="false" [showAddNew]="false"
+    [active_item]="'Dash master'"></app-header-breadcrumb>
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="card">
+
+            <div class="card-body mt-2">
+                <mat-tab-group>
+                    <mat-tab label="Dash Master">
+                        <ng-template matTabContent>
+                            <div class="mt-2">
+                                <dx-data-grid id="grid" [dataSource]="dashMainView" [allowColumnResizing]="true"
+                                    [remoteOperations]="true" [showBorders]="true"  [rowAlternationEnabled]="true">
+                                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                    <dxo-header-filter [visible]="true" alignment="right"></dxo-header-filter>
+                                    <dxo-paging [pageSize]="20"></dxo-paging>
+                                    <dxo-group-panel [visible]="false"></dxo-group-panel>
+                                    <dxo-grouping #expand [autoExpandAll]="true"></dxo-grouping>
+                                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                                    <dxo-pager [showPageSizeSelector]="true"
+                                        [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                                    <dxo-search-panel [visible]="true"
+                                        [highlightCaseSensitive]="true"></dxo-search-panel>
+                                    <dxi-column  dataField="materialCode" caption="Model Code">
+                                    </dxi-column>
+                                    <dxi-column  dataField="salesCompany" caption="Company Code"></dxi-column>
+                                    <dxi-column  dataField="customerCode" caption="Customer Code"></dxi-column>
+                                    <dxi-column  dataField="customerName" caption="Customer Name"></dxi-column>
+                                    <dxi-column  dataField="startMonth" caption="Start Month"></dxi-column>
+                                    <dxi-column  dataField="endMonth" caption="End Month"></dxi-column>
+                                    <dxi-column  dataField="reasonId" caption="Reason Code"></dxi-column>
+                                    <dxi-column  dataField="reasonName" caption="Reason"></dxi-column>
+                                    <dxi-column  dataField="supplierCode" caption="Supplier Code"></dxi-column>
+                                    <dxi-column  dataField="supplierName" caption="Supplier Name"></dxi-column>
+                                    <dxi-column  dataField="transPortMode" caption="Shipment Mode"></dxi-column>
+                                    <dxi-column  dataField="createdBy" caption="Created By"
+                                   ></dxi-column>
+                                <dxi-column  dataField="createdDate" caption="Created Date"  dataType="date" 
+                                   ></dxi-column>
+                                <dxi-column  dataField="updatedBy" caption="Modified By"
+                                    ></dxi-column>
+                                <dxi-column  dataField="updatedDate" caption="Modified Date" dataType="date"
+                                   ></dxi-column>
+                                    <dxo-export [enabled]="true" [allowExportSelectedData]="false" [fileName]="dashMasterFileName"></dxo-export>
+                                </dx-data-grid>
+                            </div>
+                        </ng-template>
+                    </mat-tab>
+                    <mat-tab label="By Month">
+                        <ng-template matTabContent>
+                            <div class="mt-2">
+                                <dx-data-grid id="gridMonthly" [dataSource]="dashMonthly" [allowColumnResizing]="true"
+                                    [remoteOperations]="true" [showBorders]="true">
+                                    <dxo-filter-row [visible]="true">
+                                    </dxo-filter-row>
+                                    <dxo-paging [pageSize]="20"></dxo-paging>
+                                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                                    <dxo-pager [showPageSizeSelector]="true"
+                                        [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+
+                                    <dxi-column  dataField="materialCode" [filterOperations]="['contains']"
+                                        caption="Model Code">
+                                    </dxi-column>
+                                    <dxi-column  dataField="salesCompany" [filterOperations]="['contains']"
+                                    caption="Company Code"></dxi-column>
+                                    <dxi-column  dataField="customerCode" caption="Customer Code"></dxi-column>
+                                    <dxi-column  dataField="customerName" [filterOperations]="['contains']"
+                                        caption="Customer Name"></dxi-column>
+                                    <dxi-column  dataField="months" 
+                                        caption="Month"></dxi-column>
+                                    <dxi-column  dataField="supplierCode" [filterOperations]="['contains']"
+                                        caption="Supplier"></dxi-column>
+                                   <dxi-column  dataField="transPortMode" caption="Shipment Mode" ></dxi-column>
+                                    <dxi-column  dataField="createdBy" caption="Created By"
+                                        ></dxi-column>
+                                    <dxi-column  dataField="createdDate" caption="Created Date" dataType="date"
+                                       ></dxi-column>
+                                    <dxi-column  dataField="updatedBy" caption="Modified By"
+                                        ></dxi-column>
+                                    <dxi-column  dataField="updatedDate" caption="Modified Date" dataType="date"
+                                        ></dxi-column>
+                                        <dxi-column  dataField="isActive" [showEditorAlways]='false'
+                                        [customizeText]='customizeText' [filterOperations]="['contains']"
+                                        caption="Is Active"></dxi-column>
+                                        <dxo-export [enabled]="true" [allowExportSelectedData]="false" [fileName]="dashMasterMonthlyFileName"></dxo-export>
+                                </dx-data-grid>
+                            </div>
+                        </ng-template>
+                    </mat-tab>
+
+                </mat-tab-group>
+            </div>
+        </div>
+
+
+    </div>
+</div>

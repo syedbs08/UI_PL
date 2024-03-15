@@ -1,0 +1,161 @@
+<app-header-breadcrumb [title]="'MANAGE USERS'" (openPopUp)="onAddNewClick($event)" [items]="['Settings']"
+    [showExport]="true" (onExportClickEvent)="onExportClick($event)" [loading]="excelLoading" [showAddNew]="false"
+    addButtonTitle="Sync User" [active_item]="'Manage Users'"></app-header-breadcrumb>
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="card " [(ngbCollapse)]="isClosed8">
+            <div class="card-header ">
+                <h3 class="card-title ">User List</h3>
+                <div class="card-options">
+
+                    <button class="text-primary" ngbTooltip="Sync user from AD" (click)="syncUser()">
+                        <i class="fa fa-refresh"></i>  Sync User
+                    </button>
+                 
+                    <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                        [attr.aria-expanded]="!isCollapsed8">
+                        <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+                    </a>
+
+                </div>
+            </div>
+            <div class="card-body " [(ngbCollapse)]="isCollapsed8">
+                <dx-data-grid id="grid" [dataSource]="dtOptions" columnResizingMode="widget"
+                    [allowColumnResizing]="true" [showBorders]="true">
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-header-filter [visible]="true" alignment="right"></dxo-header-filter>
+                    <dxo-paging [pageSize]="50"></dxo-paging>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+
+                    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                    <!-- <dxi-column caption="Image">
+                        <ng-template #imageTemplate let-data="data">
+                            <img [src]="data.userId" alt="Image" width="100" height="100">
+                          </ng-template>
+                      </dxi-column> -->
+                    <dxi-column dataField="displayName" caption="Name">
+                    </dxi-column>
+                    <dxi-column dataField="email" caption="Email">
+                    </dxi-column>
+                    <dxi-column [allowFiltering]="false" [allowSorting]="false" cellTemplate="dxcolumnroles"
+                        caption="Roles">
+                    </dxi-column>
+                    <div *dxTemplate="let data of 'dxcolumnroles'" class="text-wrap" style="font-size:12px !important">
+                        {{userRoles(data.data.roleList)}}
+                    </div>
+                    <dxi-column [allowFiltering]="false" [allowSorting]="false" cellTemplate="buttonDeleteCellTemplate">
+                    </dxi-column>
+                    <div *dxTemplate="let data of 'buttonDeleteCellTemplate'">
+
+                        <button class="btn  btn-outline-info  iconbox iconbox-xxs me-2 "
+                            ngbTooltip="Map Department and product"
+                            [routerLink]="['/masters/userprofile', {id:data.data.userId}]">
+                            <i class="mdi mdi-account-key"></i>
+                        </button>
+                        <!-- <button class="btn  btn-outline-info  iconbox iconbox-xxs me-2 " ngbTooltip="Update roles"
+                            (click)="onEdit(data.data)">
+                            <i class="mdi mdi-pencil"></i>
+                        </button>
+
+                        <button class="btn  btn-outline-danger text-danger   iconbox iconbox-xxs mr-3"
+                            (click)="deleteAllAccess(data.data)" ngbTooltip="Remove all access">
+                            <i class="fa fa-close "></i>
+                        </button> -->
+                    </div>
+                    <dxo-export [enabled]="true" [fileName]="userListFileName"></dxo-export>
+                </dx-data-grid>
+            </div>
+
+        </div>
+    </div><!-- COL END -->
+
+</div>
+
+<ng-template #userAccessModal let-modal>
+    <form [formGroup]="userAccessForm">
+        <div class="modal-header">
+            <h5 class="modal-title text-primary fw-semibold"> <span>
+                    <!-- <i class="fe fe-plus mr-2 "></i> -->
+                </span>USER ROLE MAPPING </h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12 pt-0 pb-2">
+                    <div class="card-alert alert  alert-info mb-0">
+                        It is highly recommeded to use Azure AD for User & Role Assignment to avoid delay & discrepancy
+                        !!
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2" *ngIf="newEntry">
+                <div class="col-sm-6 col-md-12">
+                    <label> User <small>(search user by email or name)</small></label>
+                    <ng-select [items]="users$| async" [minTermLength]="minLengthTerm" formControlName="UserPrincipalId"
+                        placeholder="search by name ,email" [typeahead]="usersSearch$" bindLabel="displayName"
+                        [loading]="userLoading" bindValue="id" (change)="onUserSelect($event)">
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                            <div class="media ">
+                                <div class="media-body">
+                                    <span class="h6 font-size-14 mb-1">
+                                        {{item.displayName}}</span>
+                                    <p class="text-muted font-size-12 mb-0">
+                                        {{item.userPrincipalName}} </p>
+                                </div>
+                            </div>
+
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+
+            <div class="row mb-2 mt-2" *ngIf="selectedUser">
+                <div class="col-sm-6 col-md-12 ">
+
+                    <app-profile-photo [userObjectId]="f.UserPrincipalId.value" [DisplayName]="selectedUser.displayName"
+                        [UserPrincipalName]="selectedUser.userPrincipalName "></app-profile-photo>
+                    <!-- <div class="d-flex">
+                        <div class="ms-2 mt-0 mt-sm-2 d-block">
+                            <h6 class="mb-0 fs-14 fw-semibold">
+                                {{selectedUser.displayName}}</h6>
+                            <span class="fs-12 text-muted">{{ selectedUser.userPrincipalName }}</span>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="row" *ngIf="selectedUser">
+                <div class="col-sm-6 col-md-12">
+                    <div class="form-group">
+                        <label class="form-label">Roles <span class="text-red">*</span></label>
+                        <div class="form-group">
+
+                            <ng-select bindLabel="displayName" [multiple]="true" formControlName="Role" required
+                                ngbTooltip="add or remove roles" [searchable]="true" [compareWith]="compareFn"
+                                [clearable]="true">
+                                <ng-option [value]="item" *ngFor="let item of roles">
+                                    {{item.displayName}}
+                                </ng-option>
+                            </ng-select>
+                            <div *ngIf="submitted && f.Role.errors" class="text-danger">
+                                <div *ngIf="f.Role.errors.required">Please select roles
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default-light" (click)=" onClosePopUp()">
+                <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+            <button [disabled]="loading" class="btn btn-indigo" type="button" (click)=" onSubmit()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+            </button>
+
+        </div>
+    </form>
+</ng-template>

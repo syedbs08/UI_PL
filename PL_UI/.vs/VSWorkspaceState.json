@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\components",
+    "\\src\\app\\components\\adjustment",
+    "\\src\\app\\components\\adjustment\\adjusment-upload",
+    "\\src\\app\\components\\masters",
+    "\\src\\app\\components\\masters\\material-master",
+    "\\src\\assets"
+  ],
+  "SelectedNode": "\\src\\app\\components\\adjustment\\adjustment.service.ts",
+  "PreviewInSolutionExplorer": false
+}

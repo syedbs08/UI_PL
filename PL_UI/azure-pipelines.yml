@@ -1,0 +1,34 @@
+# Node.js with Angular
+# Build a Node.js project that uses Angular.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+  - main
+
+pool:
+  vmImage: 'windows-latest'
+
+stages:
+  
+  - stage: build
+    jobs:
+      - job:
+        variables:
+         - group: TestAndUAT 
+        steps:        
+          - task: FileTransform@1
+            inputs:
+              folderPath: '$(System.DefaultWorkingDirectory)/src/assets/config/'
+              fileType: 'json'
+              targetFiles: 'config.json'
+
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '16.x'
+          - script: npm cache clean --force
+          - script: npm install --force
+          - script: npm run build -- --configuration production
+          - publish: dist
+            artifact: dist          
+  

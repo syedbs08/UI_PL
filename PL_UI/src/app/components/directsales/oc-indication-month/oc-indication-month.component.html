@@ -1,0 +1,354 @@
+<app-header-breadcrumb [title]="'OC INDICATION MONTH'" [items]="['DirectSales']" [showAddNew]="false"
+    [active_item]="'OC Indication Month'"></app-header-breadcrumb>
+
+<div class="card"  [(ngbCollapse)]="isClosed8">
+    <div class="card-header ">
+        <h3 class="card-title ">OC Indication Month Search</h3>
+        <div class="card-options">
+            <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                [attr.aria-expanded]="!isCollapsed8">
+                <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-2" [(ngbCollapse)]="isCollapsed8">
+        <form [formGroup]="searchForm">
+            <div class="row">
+                <div class="col-sm-6 col-md-3" >
+                    <div class="form-group">
+                        <label class="form-label">Month Type<span class="text-red">*</span></label>
+                        <ng-select [items]="getMonthType" bindLabel="name" 
+                            class="select2 custom-select" bindValue="id" formControlName="MonthTypeId"
+                            placeholder="Month Type"  >
+                        </ng-select>
+                        <div *ngIf="submitted && f.MonthTypeId.errors" class="text-danger">
+                            <div *ngIf="f.MonthTypeId.errors.required">Please select Month Type
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+                <!-- <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">From Month<span class="text-red">*</span></label>
+                        <input [matDatepicker]="fromDp" [formControl]="fromMonth" (click)="fromDp.open()"
+                            (focus)="fromDp.open()" class="form-control">
+                        <mat-datepicker #fromDp startView="multi-year" (yearSelected)="chosenFromYearHandler($event)"
+                            (monthSelected)="chosenFromMonthHandler($event, fromDp)">
+                        </mat-datepicker>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">To Month<span class="text-red">*</span></label>
+                        <input [matDatepicker]="toDp" [formControl]="toMonth" (click)="toDp.open()"
+                            (focus)="toDp.open()" class="form-control">
+                        <mat-datepicker #toDp startView="multi-year" (yearSelected)="chosenToYearHandler($event)"
+                            (monthSelected)="chosenToMonthHandler($event, toDp)">
+                        </mat-datepicker>
+                    </div>
+                </div> -->
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Customer Type</label>
+                        <ng-select [items]="getCustomerType" bindValue="id" bindLabel="name"
+                            (change)="loadCustomer(f.CustomerType?.value)" 
+                            placeholder="Customer Type" class=" select2 custom-select" formControlName="CustomerType">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Customer</label>
+                       
+                        <angular2-multiselect [settings]="customerMultiSelectSettings" formControlName="CustomerId"
+                        [data]="getCustomer">
+                        </angular2-multiselect>
+
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Product Sub-Category</label>
+                       
+                        <angular2-multiselect 
+                        [settings]="productCategoryId1MultiSelectSettings" 
+                        formControlName="ProductCategoryId1"
+                        [data]="getMG1" 
+                        (ngModelChange)="onMg1Select($event)">
+                        </angular2-multiselect>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group">
+                        <label class="form-label">Product Type</label>
+                       
+                        <angular2-multiselect [settings]="productCategoryId2MultiSelectSettings" formControlName="ProductCategoryId2"
+                        [data]="getMG2">
+                        </angular2-multiselect>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-9  mt-5">
+                    <label class="form-label"></label>
+                    <button [disabled]="loading" class="btn  btn-indigo pull-right" type="button" (click)="onSearch()"
+                        [style.pointer-events]="loading?'none':''">
+                        <i class="fe fe-check" *ngIf="!loading"> </i>
+                        <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                        &nbsp; {{loading? 'Submitting' : ' Search'}} &nbsp;
+                    </button>
+                    <button type="button" class="btn  mx-2  btn-default-light pull-right" (click)="reload()">
+                        <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<ng-template #attachmentModal let-modal>
+
+    <div class="modal-header">
+        <h5 class="modal-title text-primary fw-semibold"> <span>
+                <!-- <i class="fe fe-plus mr-2 "></i> -->
+            </span>Attachment </h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body ">
+        <div *ngIf="selectedAttachment.length === 0">
+            <p>No records found.</p>
+        </div>
+        <table width="100%" *ngIf="selectedAttachment && selectedAttachment.length>0"
+            class="table table-striped  nowrap">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody *ngIf="selectedAttachment != null || selectedAttachment?.length != 0">
+                <ng-container *ngFor="let item of selectedAttachment;let i = index">
+                    <tr id="{{i}}" #rowInstance>
+                        <td>{{item.ocIndicationMonthAttachmentIdFile}}</td>
+                        <td> <button type="button" class="btn btn-icon  "
+                                (click)="onAttachmentClick({item})" ngbTooltip="download">
+                                <i class="ion-arrow-down-a"></i></button></td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+
+    </div>
+</ng-template>
+
+<div class="card" [(ngbCollapse)]="isClosedUpdate8" *ngIf="showUpdate">
+    <div class="card-header ">
+        <h3 class="card-title ">OC Indication Record Update</h3>
+        <div class="card-options">
+            <a href="javascript:;" class="card-options-collapse" (click)="CollapsetoggleUpdate8()"
+                [attr.aria-expanded]="!isCollapsedUpdate8">
+                <i class="fe fe-chevron-{{ !isCollapsedUpdate8 ? 'up' : 'down'}}"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-2" [(ngbCollapse)]="isCollapsedUpdate8">
+        <form [formGroup]="entryForm">
+            <div class="row">
+                <div class="{{showMarketingTeam ? 'col-sm-6 col-md-6' : 'col-sm-6 col-md-2'}}"
+                    *ngIf="showMarketingTeam">
+                    <div class="form-group">
+                        <label class="form-label">Term Id</label>
+                        <ng-select formControlName="TermId" [items]="getTermId" bindValue="id" bindLabel="name"
+                            placeholder="Term Id" class="form-control select2 custom-select">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3" *ngIf="showSalesTeam">
+                    <div class="form-group">
+                        <label class="form-label">Reason</label>
+                        <ng-select formControlName="Reason" [items]="getReason" bindValue="id" bindLabel="name"
+                            placeholder="Reason" class="form-control select2 custom-select">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2" *ngIf="showSalesTeam">
+                    <div class="form-group">
+                        <label class="form-label">Remarks</label>
+                        <textarea class="form-control" formControlName="Remarks" placeholder="Remarks"
+                            rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2" *ngIf="showSalesTeam">
+                    <label class="form-label">Attachments</label>
+                    <ngx-dropzone class="fileupload" (change)="onSelect($event)" [multiple]="true">
+                        <ngx-dropzone-label>Select from my computer <span class="text-red">*</span></ngx-dropzone-label>
+                        <ngx-dropzone-preview *ngFor="let data of files" [removable]="true" (removed)="onRemove(f)">
+                            <ngx-dropzone-label>{{ data.name }} ({{ data.type }})</ngx-dropzone-label>
+                        </ngx-dropzone-preview>
+                    </ngx-dropzone>
+                    <div *ngIf="rejectedFile.length>0" class="text-danger">
+                        Please select a valid file
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-1" *ngIf="showSalesTeam">
+                    <div class="form-group">
+                        <label class="custom-control  custom-checkbox">
+                            <input type="checkbox" id="Active" class="custom-control-input" formControlName="IsSNS">
+                            <span class="custom-control-label">SNS</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-2" *ngIf="showMarketingTeam">
+                    <div class="form-group">
+                        <label class="custom-control  custom-checkbox">
+                            <input type="checkbox" id="Active" class="custom-control-input" formControlName="IsPO">
+                            <span class="custom-control-label">PO</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-4">
+
+                    <button *ngIf="showMarketingTeam" [disabled]="confirmloading"
+                        class="btn mx-2 mt-5 btn-indigo badgetext" type="button" (click)="onConfirm()"
+                        [style.pointer-events]="confirmloading?'none':''">
+                        <i class="fe fe-check" *ngIf="!confirmloading"> </i>
+                        <i class="fa fa-spinner fa-spin" *ngIf="confirmloading"> </i>
+                        &nbsp; {{confirmloading? 'Submitting' : ' Confirm'}} &nbsp;
+                    </button>
+                    <button *ngIf="showSalesTeam" type="button" class="btn mx-2 mt-5 btn-danger  badgetext"
+                        (click)="onDelete()" [style.pointer-events]="loading?'none':''">
+                        <i class="fe fe-check" *ngIf="!loading"> </i>
+                        <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                        &nbsp; {{deleteloading? 'Submitting' : 'Reset Status'}} &nbsp;
+                    </button>
+                    <button *ngIf="showSalesTeam" [disabled]="updateloading" class="btn mt-5 btn-indigo  badgetext"
+                        type="button" (click)="onUpdate()" [style.pointer-events]="updateloading?'none':''">
+                        <i class="fe fe-check" *ngIf="!updateloading"> </i>
+                        <i class="fa fa-spinner fa-spin" *ngIf="updateloading"> </i>
+                        &nbsp; {{updateloading? 'Submitting' : ' Update'}} &nbsp;
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row" *ngIf="showTable">
+    <div class="col-md-12 col-lg-12 pb-0">
+        <div class="card " [(ngbCollapse)]="isClosedList8">
+            <div class="card-header ">
+                <h3 class="card-title ">OC Indication Month List</h3>
+                <div class="card-options">
+                    <a href="javascript:;" class="card-options-collapse" (click)="CollapsetoggleList8()"
+                        [attr.aria-expanded]="!isCollapsedList8">
+                        <i class="fe fe-chevron-{{ !isCollapsedList8 ? 'up' : 'down'}}"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-2 pb-0" [(ngbCollapse)]="isCollapsedList8">
+                <div class="row p-2">
+                    <div class="col-sm-12 col-md-12 pb-2 ">
+
+                    </div>
+                    <dx-data-grid id="grid" [dataSource]="dataList" (onRowPrepared)="onRowPrepared($event)"
+                        columnResizingMode="widget" [allowColumnResizing]="true" 
+                        [showBorders]="true" (onSelectionChanged)="selectionChanged($event)">
+
+                        <dxo-column-chooser #columnChooser [enabled]="true" mode="select">
+                        </dxo-column-chooser>
+
+                        <dxo-selection [selectAllMode]="allMode" showCheckBoxesMode="always" mode="multiple">
+                        </dxo-selection>
+                        <dxo-filter-row [visible]="true"></dxo-filter-row>
+                        <dxo-paging [pageSize]="20"></dxo-paging>
+                        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                        <dxi-column  [visible]="false" [showInColumnChooser]="false"
+                            dataField="attachements" caption="Customer Code"></dxi-column>
+                            <dxi-column  [visible]="false" dataField="salesEntryId" caption="salesEntryId"></dxi-column>
+                        <dxi-column  dataField="customerCode"
+                            caption="Customer Code"></dxi-column>
+                        <dxi-column   dataField="customerName"
+                            caption="Customer Name"></dxi-column>
+                        <dxi-column  dataField="mg" caption="MG1"></dxi-column>
+                        <dxi-column  [visible]="false" dataField="mg1" caption="MG2"></dxi-column>
+                        <dxi-column  dataField="materialCode" caption="Material Code"></dxi-column>
+                        <dxi-column  dataField="monthYear" caption="Month Year"></dxi-column>
+                        <dxi-column  dataField="orderQunatity" caption="Order Qty">
+                            <dxo-format format="#,##0.00"></dxo-format>
+                        </dxi-column>
+                        <dxi-column dataField="snsQunatity" caption="SNS Qty">
+                            <dxo-format format="#,##0"></dxo-format>
+                        </dxi-column>
+                        <dxi-column  dataField="totalQunatity" caption="Total Qty">
+                            <dxo-format format="#,##0"></dxo-format>
+                        </dxi-column>
+                        <dxi-column  dataField="orderPrice" caption="O Price">
+                            <dxo-format format="#,##0.00"></dxo-format>
+                        </dxi-column>
+                        <dxi-column  dataField="snsPrice" caption="SNS Price">
+                            <dxo-format format="#,##0.00"></dxo-format>
+                        </dxi-column>
+                        <dxi-column  dataField="order_Amount" caption="O Amt">
+                            <dxo-format format="#,##0.00"></dxo-format>
+                        </dxi-column>
+                        <dxi-column  dataField="snsAmount" caption="SNS Amt">
+                            <dxo-format format="#,##0.00"></dxo-format>
+                        </dxi-column>
+                        <dxi-column  dataField="amount" caption="Total Amount">
+                            <dxo-format format="#,##0.00"></dxo-format>
+                        </dxi-column>
+                        <dxi-column  dataField="reason" caption="Reason"></dxi-column>
+                        <dxi-column  [showEditorAlways]='false' [customizeText]='customizeText'
+                            dataField="isSNS" caption="Is SNS"></dxi-column>
+                        <dxi-column  dataField="ocIndicationMonthStatus" caption="Confirmed?"></dxi-column>
+                        <dxi-column [visible]="false" dataField="remarks" caption="Remarks"></dxi-column>
+                        <dxo-export [enabled]="true" [fileName]="fileName"></dxo-export>
+
+                        <dxo-summary>
+                            <dxi-total-item column="orderQunatity" [valueFormat]="'#,##0'" summaryType="sum"
+                                displayFormat=" {0}">
+                            </dxi-total-item>
+                            <dxi-total-item column="snsQunatity" [valueFormat]="'#,##0'" summaryType="sum"
+                                displayFormat=" {0}">
+                            </dxi-total-item>
+                            <dxi-total-item column="totalQunatity" [valueFormat]="'#,##0'" summaryType="sum"
+                                displayFormat=" {0}">
+                            </dxi-total-item>
+                            <dxi-total-item column="orderPrice" [valueFormat]="'#,##0.00'" summaryType="sum"
+                                displayFormat=" {0}">
+                            </dxi-total-item>
+                            <dxi-total-item column="snsPrice" [valueFormat]="'#,##0.00'" summaryType="sum"
+                                displayFormat=" {0}">
+                            </dxi-total-item>
+                            <dxi-total-item column="order_Amount" [valueFormat]="'#,##0.00'" summaryType="sum"
+                                displayFormat=" {0}">
+                            </dxi-total-item>
+                            <dxi-total-item column="snsAmount" [valueFormat]="'#,##0.00'" summaryType="sum"
+                                displayFormat=" {0}">
+                            </dxi-total-item>
+                            <dxi-total-item column="amount" [valueFormat]="'#,##0.00'" summaryType="sum"
+                                displayFormat=" {0}">
+                            </dxi-total-item>
+                        </dxo-summary>
+
+                        <dxo-toolbar>
+                            <dxi-item location="after">
+                                <div *dxTemplate>
+                                    <button type="button" class="btn btn-icon   btn-outline-default"
+                                        (click)="onDownload()" ngbTooltip="Attachment">
+                                        <i class="fa fa-paperclip"></i></button>
+                                </div>
+                            </dxi-item>
+                            <dxi-item name="exportButton"></dxi-item>
+                            <dxi-item name="columnChooserButton"></dxi-item>
+                            <dxi-item name="searchPanel"></dxi-item>
+                        </dxo-toolbar>
+
+                    </dx-data-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

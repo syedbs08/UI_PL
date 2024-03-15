@@ -1,0 +1,14 @@
+.dropzone ::ng-deep .dropzone.dz-wrapper .dz-message {
+    border: none !important;
+    height: 100px!important;
+}
+
+:host ::ng-deep img { max-width: 200px !important; max-height: 100px !important; width:100% important; } 
+ngx-dropzone {
+    height:140px !important;
+    min-height: 140px !important;
+   
+}
+#excelIcon{
+    margin-right: 3px;
+}

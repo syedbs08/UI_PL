@@ -1,0 +1,51 @@
+
+<app-header-breadcrumb [title]="'USER DETAILS'" (openPopUp)="onBackClick($event)" [items]="['Settings']" addButtonTitle="Go Back"
+    [showExport]="false" [showAddNew]="true" icon="fa fa-step-backward" [active_item]="'USER DETAILS'"></app-header-breadcrumb>
+    <div class="row" id="user-profile">
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-body">
+                 <app-userprofile [userObjectId]="userObjectId" [assingDept]="totalAssignDeparment" [assingProductMap]="totalAssignProduct"></app-userprofile>
+                </div>
+                <div class="border-top">
+                    <div class="wideget-user-tab">
+                        <div class="tab-menu-heading">
+                            <div class="tabs-menu1">
+                                <ul ngbNav #nav1="ngbNav" [activeId]="1" class="">
+                                    <li [ngbNavItem]="1" class=""><a ngbNavLink>DEPARTMENTS</a>
+                                        <ng-template ngbNavContent>
+                                            <div id="profile-log-switch">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                       <app-assignuser-department [userObjectId]="userObjectId" (totalDeparment)="totalDeparmentCount($event)"></app-assignuser-department>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </li>
+                                    <li [ngbNavItem]="2"><a ngbNavLink class="">PRODUCTS</a>
+                                        <ng-template ngbNavContent>
+                                            <div id="profile-log-switch">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                    <app-assignuserproduct [userObjectId]="userObjectId" (totalProduct)="totalProductCount($event)"></app-assignuserproduct>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div [ngbNavOutlet]="nav1" class="tab-content">
+
+            </div>
+        </div>
+        <!-- COL-END -->
+    </div>

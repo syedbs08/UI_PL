@@ -1,0 +1,196 @@
+<app-header-breadcrumb [title]="'SNS DOWNLOAD'" [active_item]="'SNS DOWNLOAD'" [showAddNew]="false" [items]="['SNS']"
+  [showExport]="false"></app-header-breadcrumb>
+
+<div class="card" [(ngbCollapse)]="isClosed8">
+  <div class="card-header ">
+    <h3 class="card-title ">SNS Download</h3>
+    <div class="card-options">
+      <a href="javascript:;" class="card-options-collapse" [attr.aria-expanded]="!isCollapsed8">
+        <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+      </a>
+    </div>
+  </div>
+  <div class="card-body p-2" [(ngbCollapse)]="isCollapsed8">
+
+    <form [formGroup]="snsdownloadform">
+      <div class="row">
+        <div class="col-sm-6 col-md-3">
+          <div class="form-group">
+            <label class="form-label">From Month</label>
+            <input [matDatepicker]="fromDp" [formControl]="fromMonth" (click)="fromDp.open()" (focus)="fromDp.open()"
+              class="form-control">
+            <mat-datepicker #fromDp startView="multi-year" (yearSelected)="chosenFromYearHandler($event)"
+              (monthSelected)="chosenFromMonthHandler($event, fromDp)">
+            </mat-datepicker>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="form-group">
+            <label class="form-label">To Month</label>
+            <input [matDatepicker]="toDp" [formControl]="toMonth" (click)="toDp.open()" (focus)="toDp.open()"
+              class="form-control">
+            <mat-datepicker #toDp startView="multi-year" (yearSelected)="chosenToYearHandler($event)"
+              (monthSelected)="chosenToMonthHandler($event, toDp)">
+            </mat-datepicker>
+
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="form-group">
+            <label class="form-label">OAC<span class="text-red">*</span></label>
+            <ng-select [items]="accountList" formControlName="oacAccountId" placeholder="Select OAC"
+              bindLabel="displaytext" bindValue="accountId" (change)="accountChange()">
+              <ng-template ng-option-tmp let-item="item" let-index="index">
+                <div class="media ">
+                  <div class="media-body">
+                    <span class="h6 font-size-14 mb-1">
+                      {{item.accountCode}}</span>
+                    <p class="font-size-12 mb-0">
+                      {{item.accountName}} </p>
+                  </div>
+                </div>
+
+              </ng-template>
+            </ng-select>
+
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="form-group">
+            <label class="form-label mt-0">Country</label>
+            <angular2-multiselect
+            [settings]="customerMultiSelectSettings"
+            placeholder="Country"
+            formControlName="country"
+            [data]="countryList"
+            (ngModelChange)="loadCustomer($event)" ></angular2-multiselect>
+      
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="form-group">
+            <label class="form-label mt-0">Customer</label>
+           <angular2-multiselect [settings]="customerMultiSelectSettings" placeholder="Customer"
+              formControlName="customer" [data]="customerList">
+            </angular2-multiselect>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="form-group">
+            <label class="form-label mt-0">Product Sub-Category</label>
+         
+            <angular2-multiselect [settings]="customerMultiSelectSettings" 
+             (ngModelChange)="getProductSubCategoryList($event)" placeholder="Sub-Category"
+              formControlName="productcategory" [data]="productCategoryList">
+            </angular2-multiselect>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="form-group">
+            <label class="form-label mt-0">Product Type</label>
+            <angular2-multiselect [settings]="customerMultiSelectSettings" 
+             placeholder="Product Type"
+             formControlName="productsubcategory" [data]="productSubCategoryList">
+           </angular2-multiselect>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="form-group">
+            <div class="form-label">Sales Sub Type <span class="text-red">*</span></div>
+            <div class="custom-controls-stacked">
+              <label class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" name="saleSubType" value="Monthly" checked
+                  formControlName="saleSubType">
+                <span class="custom-control-label">Monthly</span>
+              </label>
+              <label class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" name="saleSubType" value="BP"
+                  formControlName="saleSubType">
+                <span class="custom-control-label">BP</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-12  mt-5 text-end">
+          <label class="form-label"></label>
+
+          <button [disabled]="searching" type="button" class="btn mx-2 btn-indigo" (click)="onSearch()"
+            [style.pointer-events]="searching?'none':''">
+            <i class="fe fe-search" *ngIf="!searching"> </i>
+            <i class="fa fa-spinner fa-spin" *ngIf="searching"> </i>
+            &nbsp; {{searching? 'Searching' : ' Search'}} &nbsp;
+          </button>
+          <button [disabled]="loading" class="btn mx-2 btn-indigo" type="button" (click)="onDownload()"
+            [style.pointer-events]="loading?'none':''">
+            <i class="fe fe-download" *ngIf="!loading"> </i>
+            <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+            &nbsp; {{loading? 'Downloading' : ' Download'}} &nbsp;
+          </button>
+          <button type="button" class="btn mx-2 btn-default-light" (click)="clearnScreen()">
+            <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="row" *ngIf="visible">
+  <div class="col-md-12 col-lg-12 pb-0">
+    <div class="card " [(ngbCollapse)]="isClosedList8">
+      <div class="card-header ">
+        <h3 class="card-title ">SNS Download List</h3>
+        <div class="card-options">
+          <a href="javascript:;" class="card-options-collapse" (click)="CollapsetoggleList8()"
+            [attr.aria-expanded]="!isCollapsedList8">
+            <i class="fe fe-chevron-{{ !isCollapsedList8 ? 'up' : 'down'}}"></i>
+          </a>
+        </div>
+      </div>
+      <div class="card-body p-2 pb-0" [(ngbCollapse)]="isCollapsedList8">
+        <div class="row p-2">
+          <div class="col-sm-12 col-md-12 pb-2 ">
+            <dx-data-grid id="gridContainer" [dataSource]="snsEntryList" keyExpr="customerCode" [showBorders]="true"
+              columnResizingMode="widget" [allowColumnResizing]="true">
+              <dxo-column-chooser #columnChooser [enabled]="true" mode="select">
+              </dxo-column-chooser>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-paging [pageSize]="20"></dxo-paging>
+              <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+              <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+              <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+              <dxi-column dataField="customerCode" caption="Customer Code"></dxi-column>
+              <dxi-column dataField="customerName" caption="Customer Name"></dxi-column>
+              <dxi-column dataField="materialCode" caption="Material code"></dxi-column>
+              <dxi-column [alignment]="'right'" dataField="monthYear" caption="Month Year"></dxi-column>
+
+              <dxi-column [alignment]="'right'" dataField="quantity" caption="Qty">
+                <dxo-format format="#,##0"></dxo-format>
+              </dxi-column>
+              <dxi-column [alignment]="'right'" dataField="price" caption="Price">
+                <dxo-format format="#,##0.00"></dxo-format>
+              </dxi-column>
+              <dxi-column [alignment]="'right'" dataField="totalPrice" caption="Total Amount" valueFormat="decimal">
+                <dxo-format format="#,##0.00"></dxo-format>
+              </dxi-column>
+              <dxo-export [enabled]="true" [fileName]="fileName"></dxo-export>
+              <dxo-summary>
+                <dxi-total-item column="quantity" [valueFormat]="'#,##0'" summaryType="sum" displayFormat=" {0}">
+                </dxi-total-item>
+                <dxi-total-item column="price" [valueFormat]="'#,##0.00'" summaryType="sum" displayFormat=" {0}">
+                </dxi-total-item>
+                <dxi-total-item column="totalPrice" [valueFormat]="'#,##0.00'" summaryType="sum" displayFormat=" {0}">
+                </dxi-total-item>
+              </dxo-summary>
+              <dxo-toolbar>
+                <dxi-item name="exportButton"></dxi-item>
+
+                <dxi-item name="columnChooserButton"></dxi-item>
+                <dxi-item name="searchPanel"></dxi-item>
+              </dxo-toolbar>
+
+            </dx-data-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

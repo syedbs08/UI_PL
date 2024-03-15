@@ -1,0 +1,87 @@
+<app-header-breadcrumb [title]="'ARCHIVE DATA'" [items]="['ArchiveData']" [showAddNew]="false"
+    [active_item]="'SNS'"></app-header-breadcrumb>
+
+    <div class="card" [(ngbCollapse)]="isClosed8">
+      <form [formGroup]="archiveForm">
+      <div class="card-header ">
+        <h3 class="card-title ">Archive Search</h3>
+        <div class="card-options">
+            <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                [attr.aria-expanded]="!isCollapsed8">
+                <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-2" [(ngbCollapse)]="isCollapsed8">
+      <div class="row">
+          <div class="col-sm-6 col-md-4">
+            <div class="form-group">
+              <label class="form-label">Archive Type <span class="text-red">*</span></label>
+              <ng-select [items]="getarchiveType" bindLabel="archivename" class=" select2 custom-select"
+                bindValue="archiveid" formControlName="ArchiveType"
+                (change)="loadCurrentMonth(f.ArchiveType?.value)"  placeholder="Archive Type">
+              </ng-select>
+              <div *ngIf="submitted && f.ArchiveType.errors" class="text-danger">
+                <div *ngIf="f.ArchiveType.errors.required">Please select archive type
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="form-group">
+              <label class="form-label">Month<span class="text-red">*</span></label>
+              <input type="text" class="form-control"  [readOnly]="true"
+              formControlName="Month" />
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="form-group">
+            <button [disabled]="loading" class="btn mx-2 mt-37 btn-indigo" type="button" 
+                [style.pointer-events]="loading?'none':''" (click)="onSubmit()">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : 'Archive Data'}} &nbsp;
+            </button>
+            <button type="button" class="btn mx-2 mt-37 btn-default-light" (click)="clearForm()">
+              <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+            </div>
+          </div>
+      </div>
+     
+    </div>
+      </form>
+    </div>
+
+<div class="row" *ngIf="showTable">
+  <div class="col-md-12 col-lg-12 pb-0">
+      <div class="card " [(ngbCollapse)]="isClosedList8">
+          <div class="card-header ">
+              <h3 class="card-title ">Archive Data List</h3>
+              <div class="card-options">
+                  <a href="javascript:;" class="card-options-collapse" (click)="CollapsetoggleList8()"
+                      [attr.aria-expanded]="!isCollapsedList8">
+                      <i class="fe fe-chevron-{{ !isCollapsedList8 ? 'up' : 'down'}}"></i>
+                  </a>
+              </div>
+          </div>
+          <div class="card-body p-2 pb-0" [(ngbCollapse)]="isCollapsedList8">
+              <div class="row p-2">
+                  <dx-data-grid  id="grid" [dataSource]="dataList" columnResizingMode="widget"  [allowColumnResizing]="true" [remoteOperations]="true" [showBorders]="true">
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-paging [pageSize]="20"></dxo-paging>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                    <dxi-column dataField="materialCode" caption="Model"></dxi-column>
+                    <dxi-column  dataField="currentMonthYear" caption="Plan Month"></dxi-column>
+                    <dxi-column  dataField="orderQty" caption="Order"></dxi-column>
+                    <dxi-column  dataField="purchaseQty" caption="Purchase"></dxi-column>
+                    <dxi-column  dataField="inventoryQty" caption="Inventory"></dxi-column>
+                    <dxi-column  dataField="oac" caption="Consignee Account"></dxi-column>
+                    <dxo-export [enabled]="true" fileName="archive-data"></dxo-export>
+                </dx-data-grid>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

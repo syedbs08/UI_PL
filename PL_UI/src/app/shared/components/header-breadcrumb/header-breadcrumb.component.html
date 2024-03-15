@@ -1,0 +1,29 @@
+<!-- PAGE-HEADER -->
+<div class="page-header">
+    <div>
+        <h1 class="page-title">{{title}}</h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" *ngFor="let item of items"><a href="javascript:;">{{item}}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{active_item}}</li>
+        </ol>
+    </div>
+    <div class="ms-auto pageheader-btn">
+        <a href="javascript:;" class="btn btn-primary btn-icon text-white me-2" *ngIf="showAddNew" (click)="onAddNew()">
+            <span>
+                <i class="{{icon}}"></i>
+            </span> {{addButtonTitle}}
+        </a>
+        <a href="javascript:;" class="btn btn-primary btn-icon text-white me-2" *ngIf="showOtherButton" (click)="onOtherclick()">
+            <span>
+                <i class="{{otherIcon}}"></i>
+            </span> {{OtherButtonTitle}}
+        </a>
+        
+        <a href="javascript:;" class="btn btn-success btn-icon text-white" *ngIf="showExport" (click)="onExportClick()">
+            <i class="fa fa-file-excel-o" *ngIf="!loading"> </i>
+            <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+            &nbsp; {{loading? 'Exporting' : ' Export'}} &nbsp;
+        </a>
+    </div>
+</div>
+<!-- PAGE-HEADER END -->

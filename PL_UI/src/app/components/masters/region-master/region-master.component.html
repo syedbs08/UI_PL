@@ -1,0 +1,123 @@
+<app-header-breadcrumb [title]="'REGION MASTER'" [items]="['Masters']" [showExport]="false" (onExportClickEvent)="onExportClick($event)"
+[loading]="excelLoading"  (openPopUp)="onAddNewClick($event)" [active_item]="'Region'"></app-header-breadcrumb>
+
+
+<ng-template #regionEntryModal let-modal>
+    <form [formGroup]="regionForm">
+        <div class="modal-header">
+            <h5 class="modal-title text-primary fw-semibold"> <span>
+                    <!-- <i class="fe fe-plus mr-2 "></i> -->
+                </span>REGION</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6 col-md-12">
+                    <div class="form-group">
+                        <label class="form-label">Region Code <span class="text-red">*</span></label>
+                        <input type="text" class="form-control" maxlength="10" placeholder="code"
+                            formControlName="RegionCode">
+                        <div *ngIf="submitted && f.RegionCode.errors" class="text-danger">
+                            <div *ngIf="f.RegionCode.errors.required">Please enter region code
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-6 col-md-12">
+                    <div class="form-group">
+                        <label class="form-label">Region Name <span class="text-red">*</span></label>
+                        <input type="text" class="form-control" maxlength="100" placeholder="region name"
+                            formControlName="RegionName">
+                        <div *ngIf="submitted && f.RegionName.errors" class="text-danger">
+                            <div *ngIf="f.RegionName.errors.required">Please enter region name
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-12">
+                    <div class="form-group">
+                        <label class="form-label">Region Short Description<span class="text-red">*</span></label>
+                        <input type="text" class="form-control" maxlength="200" placeholder="short description"
+                            formControlName="RegionShortDescription">
+                        <div *ngIf="submitted && f.RegionShortDescription.errors" class="text-danger">
+                            <div *ngIf="f.RegionShortDescription.errors.required">Please enter region short description
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-12">
+                    <div class="form-group">
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" formControlName="IsActive">
+                            <span class="custom-control-label">Active</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+
+            <button type="button" class="btn btn-default-light" (click)="resetForm()">
+                <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+            <button [disabled]="loading" class="btn btn-indigo" type="button" (click)="onSubmit()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+            </button>
+        </div>
+    </form>
+</ng-template>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="card " [(ngbCollapse)]="isClosed8">
+                        <div class="card-header ">
+                            <h3 class="card-title ">Region List</h3>
+                            <div class="card-options">
+                                <a href="javascript:;" class="card-options-collapse" (click)="Collapsetoggle8()"
+                                    [attr.aria-expanded]="!isCollapsed8">
+                                    <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+                                </a>
+            
+                            </div>
+                        </div>
+                        <div class="card-body " [(ngbCollapse)]="isCollapsed8">
+                <dx-data-grid  id="grid" [dataSource]="regionList" columnResizingMode="widget"  [allowColumnResizing]="true" [remoteOperations]="true" [showBorders]="true">
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-header-filter [visible]="true" alignment="right"></dxo-header-filter>
+                    <dxo-paging [pageSize]="20"></dxo-paging>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                    <dxi-column   dataField="regionCode" caption="Region Code">
+                    </dxi-column>
+                    <dxi-column dataField="regionName" caption="Region Name"></dxi-column>
+                    <dxi-column  dataField="regionShortDescription" caption="Region Short Desc"></dxi-column>
+                    <dxi-column dataField="isActive" [showEditorAlways]='false' [customizeText]='customizeText' caption="IsActive"></dxi-column>
+                    <dxi-column [allowFiltering]="false" [allowSorting]="false" cellTemplate="buttonDeleteCellTemplate">
+                    </dxi-column>
+                    <div *dxTemplate="let data of 'buttonDeleteCellTemplate'" >
+                        <button class="btn  btn-outline-info  iconbox  me-2 iconbox-xxs" ngbTooltip="View & Update"
+                            (click)="onRegionSelect(data.data)">
+                            <i class="mdi mdi-pencil"></i>
+                        </button>
+                        <button class="btn  btn-outline-danger text-danger   iconbox iconbox-xxs mr-3 " 
+                        (click)="onRegionSelectDelete(data.data)" ngbTooltip="Remove">
+                            <i class="fa fa-close "></i>
+                        </button>
+                    </div>
+                    <dxo-export [enabled]="true" fileName="Region"></dxo-export>
+                </dx-data-grid>
+            </div>
+           
+        </div>
+    </div>
+</div>

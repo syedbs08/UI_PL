@@ -1,0 +1,139 @@
+<app-header-breadcrumb [title]="'SNS UPLOAD'" [items]="['SNS']" [active_item]="'SNS Upload'"
+    [showAddNew]="false">
+</app-header-breadcrumb>
+
+<form [formGroup]="uploadForm" >
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">SNS Excel Upload</h3>
+        </div>
+        <div class="card-body" id="entryForm">
+            <div class="row">
+                
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">OAC<span class="text-red">*</span></label>
+                         <ng-select [items]="accountList"  formControlName="oacAccountId"
+                        placeholder="Select OAC"  bindLabel="displaytext"
+                        bindValue="accountId">
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                            <div class="media ">
+                                <div class="media-body">
+                                    <span class="h6 font-size-14 mb-1">
+                                        {{item.accountCode}}</span>
+                                    <p class="font-size-12 mb-0">
+                                        {{item.accountName}} </p>
+                                </div>
+                            </div>
+
+                        </ng-template>
+                    </ng-select>
+
+                    </div>
+                </div>
+               
+                <div class="col-sm-6 col-md-2">
+                    <div class="form-group">
+                        <div class="form-label">Sales Sub Type <span class="text-red">*</span></div>
+                        <div class="custom-controls-stacked">
+                            <label class="custom-control custom-radio" >
+                                <input type="radio" class="custom-control-input" name="saleSubType" value="Monthly"
+                                    checked formControlName="saleSubType">
+                                <span class="custom-control-label">Monthly</span>
+                            </label>
+                            <label class="custom-control custom-radio" >
+                                <input type="radio" class="custom-control-input" name="saleSubType" value="BP"
+                                    formControlName="saleSubType">
+                                <span class="custom-control-label">BP</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                
+                
+                <div class="col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">File<span class="text-red">*</span></label>
+                        <ngx-dropzone class="uploadFile" (change)="onSelect($event)" [multiple]="false"
+                            accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                            <ngx-dropzone-label>Select from my computer <span
+                                    class="text-red">*</span></ngx-dropzone-label>
+                            <ngx-dropzone-preview class="file" *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                                <ngx-dropzone-label>{{ f.name }}</ngx-dropzone-label>
+                            </ngx-dropzone-preview>
+                        </ngx-dropzone>
+                        <!-- <div *ngIf="rejectedFile.length>0" class="text-danger">
+                            Please select a valid file
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default-light" (click)="clearForm()">
+                <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+            <button [disabled]="loading" class="btn btn-indigo" type="button" (click)="onSubmit()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+            </button>
+        <button class="btn btn-indigo ml-2" type="button" (click)="onRunPriceProcess()"
+        [style.pointer-events]="loading1?'none':''">
+        <i class="fe fe-repeat" *ngIf="!loading1"> </i>
+        <i class="fa fa-spinner fa-spin" *ngIf="loading1"> </i>
+        &nbsp; {{loading1? 'Submitting' : ' Run Price Process BP '}} &nbsp;
+    </button>
+        </div>
+        <div class="col-sm-6 col-md-12" *ngIf="showError">
+            <div class="card">
+              <div class="card-body">
+                <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+                    <mat-tab>
+                      <ng-template mat-tab-label>
+                          <span class="tab-header" [ngClass]="{'text-danger': missingItems.length}">Missing Items ({{missingItems.length}})</span>
+                      </ng-template>
+                      <div>
+                          <ol>
+                              <li class="error-message" *ngFor="let item of missingItems">{{item.responseMessage}}</li>
+                          </ol>
+                      </div>
+                      
+                    </mat-tab>
+                    <!-- <mat-tab>
+                      <ng-template mat-tab-label>
+                          <span class="tab-header" [ngClass]="{'text-danger': negativeInventoryItems.length}">Negative Inventory ({{negativeInventoryItems.length}})</span>
+                      </ng-template>
+                      <div>
+                          <ol>
+                              <li class="error-message" *ngFor="let item of negativeInventoryItems">{{item.responseMessage}}</li>
+                          </ol>
+                      </div>
+                    </mat-tab>
+                    <mat-tab>
+                      <ng-template mat-tab-label>
+                          <span class="tab-header" [ngClass]="{'text-danger': duplicateItems.length}">Duplicate Items ({{duplicateItems.length}})</span>
+                      </ng-template>
+                      <div>
+                          <ol>
+                              <li class="error-message" *ngFor="let item of duplicateItems">{{item.responseMessage}}</li>
+                          </ol>
+                      </div>
+                    </mat-tab> -->
+                    <!-- <mat-tab>
+                      <ng-template mat-tab-label>
+                          <span class="tab-header" [ngClass]="{'text-danger': otherErrors.length}">Other Errors ({{otherErrors.length}})</span>
+                      </ng-template>
+                      <div>
+                          <ol>
+                              <li class="error-message" *ngFor="let item of otherErrors">{{item.responseMessage}}</li>
+                          </ol>
+                      </div>
+                    </mat-tab> -->
+                  </mat-tab-group>
+              </div>
+            </div>
+          </div>
+    </div>
+</form>

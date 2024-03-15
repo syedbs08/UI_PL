@@ -1,0 +1,49 @@
+<app-header-breadcrumb [title]="'COUNTRY MASTER'" [items]="['Masters']" [showExport]="true"
+    [active_item]="'Country'"></app-header-breadcrumb>
+
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="card " [(ngbCollapse)]="isClosed8">
+            <div class="card-header ">
+                <h3 class="card-title ">Country List</h3>
+                <div class="card-options">
+                    <a href="javascript:;" class="card-options-collapse" [attr.aria-expanded]="!isCollapsed8">
+                        <i class="fe fe-chevron-{{ !isCollapsed8 ? 'up' : 'down'}}"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body " [(ngbCollapse)]="isCollapsed8">
+                <dx-data-grid id="grid" [dataSource]="dataSource" [remoteOperations]="true" [showBorders]="true">
+                    <dxo-filter-row [visible]="true"></dxo-filter-row>
+                    <dxo-header-filter [visible]="true"></dxo-header-filter>
+                    <dxo-paging [pageSize]="20"></dxo-paging>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"></dxo-pager>
+                    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+
+
+                    <dxi-column dataField="countryCode" caption="Country Code">
+
+                    </dxi-column>
+                    <dxi-column dataField="countryName" caption="Country Name"></dxi-column>
+                    <dxi-column dataField="countryShortDesc" caption="Short Description"></dxi-column>
+                    <dxi-column dataField="isActive" caption="Status"></dxi-column>
+
+                    <dxi-column [allowFiltering]="false" [allowSorting]="false" cellTemplate="buttonDeleteCellTemplate">
+                    </dxi-column>
+                    <div *dxTemplate="let data of 'buttonDeleteCellTemplate'" width="10">
+                        <button class="btn  btn-outline-info  iconbox iconbox-sm me-2 " ngbTooltip="View & Update"
+                            (click)="onEdiCountry(data.data)">
+                            <i class="mdi mdi-pencil"></i>
+                        </button>
+                        <button class="btn  btn-outline-danger text-danger   iconbox iconbox-sm mr-3"
+                            (click)="onCountrySelectDelete(data.data)" ngbTooltip="Remove all access">
+                            <i class="fa fa-close "></i>
+                        </button>
+                    </div>
+
+
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+</div>

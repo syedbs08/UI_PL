@@ -1,0 +1,78 @@
+<ng-template #assignProductModal let-modal>
+    <form [formGroup]="userProductMappingForm">
+        <div class="modal-header">
+            <h5 class="modal-title text-primary fw-semibold"> <span>
+                </span>Assign Product </h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row" *ngIf="newEntry">
+                <div class="col-sm-6 col-md-12">
+                    <div class="form-group">
+                        <label class="form-label">Product <span class="text-red">*</span></label>
+                        <angular2-multiselect
+                        [settings]="customerMultiSelectSettings"
+                         ngbTooltip="add or remove department mapping" 
+                        formControlName="products"
+                        [data]="userProductList"
+                         > </angular2-multiselect>
+                            <div *ngIf="submitted && f.products.errors" class="text-danger">
+                                <div *ngIf="f.products.errors.required">Please select product
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default-light" (click)=" onClosePopUp()">
+                <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+            <button [disabled]="loading" class="btn btn-indigo" type="button" (click)=" onSubmit()"
+                [style.pointer-events]="loading?'none':''">
+                <i class="fe fe-check" *ngIf="!loading"> </i>
+                <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+                &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+            </button>
+        </div>
+    </form>
+</ng-template>
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="card ">
+            <div class="card-header ">
+
+                <h5 class="text-primary">Assigned Products</h5>
+
+                <div class="ms-auto pageheader-btn">
+                    <button type="button" class="btn btn-icon  btn-primary float-lg-end" ngbTooltip="Assign Product"
+                        (click)="onAddNewClick($event)">
+                        <i class="fa fa-sitemap"></i> Manage User Product</button>
+                </div>
+            </div>
+            <div class="card-body m-0 p-0 " [(ngbCollapse)]="isCollapsed8">
+                <div class="card-alert alert  alert-info mb-0"
+                    *ngIf="!userproductMapping || userproductMapping.length==0">
+                    No product mapping found!!
+                </div>
+                <table width="100%" *ngIf="userproductMapping && userproductMapping.length>0"
+                    class="table table-striped table-bordered nowrap table-hover">
+                    <thead>
+                        <tr>
+                            <th>SR. Number</th>
+                            <th>Product Name</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="userproductMapping != null || userproductMapping?.length != 0">
+                        <ng-container *ngFor="let item of userproductMapping;let i = index">
+                            <tr id="{{i}}" #rowInstance>
+                                <td>{{i+1}}</td>
+                                <td>{{item.productCode}} - {{item.productName}}</td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

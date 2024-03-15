@@ -1,0 +1,78 @@
+<app-header-breadcrumb [title]="'Direct Sales'" [items]="['DirectSales']" 
+    [active_item]="'SSD Forecast Upload'"
+    [showAddNew]="false" *ngIf="showheader">
+</app-header-breadcrumb>
+
+<div class="card" >
+    <div class="card-header" *ngIf="showheader">
+        <h3 class="card-title">SSD Forecast Upload</h3>
+    </div>
+    <div class="card-body" id="entryForm">
+        <div class="row">
+            <div class="col-sm-6 col-md-12">
+                <div class="form-group">
+                    <label class="form-label">File<span class="text-red">*</span></label>
+                    <ngx-dropzone (change)="onSelect($event)" [multiple]="false"
+                        accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        <ngx-dropzone-label>Select from my computer <span
+                                class="text-red">*</span></ngx-dropzone-label>
+                        <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                            <ngx-dropzone-label>{{ f.name }}</ngx-dropzone-label>
+                        </ngx-dropzone-preview>
+                    </ngx-dropzone>
+                    <div *ngIf="rejectedFile.length>0" class="text-danger">
+                        Please select a valid file
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default-light" (click)="clearForm()">
+            <i class="fa fa-eraser "></i> &nbsp;Clear &nbsp;</button>
+        <button [disabled]="loading" class="btn btn-indigo" type="button" (click)="onSubmit()"
+            [style.pointer-events]="loading?'none':''">
+            <i class="fe fe-check" *ngIf="!loading"> </i>
+            <i class="fa fa-spinner fa-spin" *ngIf="loading"> </i>
+            &nbsp; {{loading? 'Submitting' : ' Submit'}} &nbsp;
+        </button>
+    </div>
+    <div class="col-sm-6 col-md-12" *ngIf="showError">
+        <div class="card">
+            <div class="card-body">
+            <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <span class="tab-header" [ngClass]="{'text-danger': missingItems.length}">Missing Items ({{missingItems.length}})</span>
+                    </ng-template>
+                    <div>
+                        <ol>
+                            <li class="error-message" *ngFor="let item of missingItems">{{item.responseMessage}}</li>
+                        </ol>
+                    </div>
+                </mat-tab>
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <span class="tab-header" [ngClass]="{'text-danger': duplicateItems.length}">Duplicate Items ({{duplicateItems.length}})</span>
+                    </ng-template>
+                    <div>
+                        <ol>
+                            <li class="error-message" *ngFor="let item of duplicateItems">{{item.responseMessage}}</li>
+                        </ol>
+                    </div>
+                  </mat-tab>
+                  <mat-tab>
+                    <ng-template mat-tab-label>
+                        <span class="tab-header" [ngClass]="{'text-danger': otherErrors.length}">Other Errors ({{otherErrors.length}})</span>
+                    </ng-template>
+                    <div>
+                        <ol>
+                            <li class="error-message" *ngFor="let item of otherErrors">{{item.responseMessage}}</li>
+                        </ol>
+                    </div>
+                  </mat-tab>
+            </mat-tab-group>
+            </div>
+        </div>
+        </div>
+</div>
